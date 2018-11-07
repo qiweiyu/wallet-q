@@ -99,7 +99,8 @@ android {
 
     defaultConfig {
         applicationId "com.wallet_q"
-        minSdkVersion rootProject.ext.minSdkVersion
+        //minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -133,6 +134,12 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r236355'
     }
 }
 
