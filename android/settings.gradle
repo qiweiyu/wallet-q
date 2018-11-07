@@ -1,0 +1,3 @@
+rootProject.name = 'wallet_q'
+
+include ':app'
