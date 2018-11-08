@@ -39,7 +39,7 @@ export default class Wallet {
   @action
   async delAddress() {
     try {
-      await AsyncStorage.removeItem('address');
+      await AsyncStorage.clear();
       this.address = '';
       this.hasWif = false;
       this.hasMnemonic = false;

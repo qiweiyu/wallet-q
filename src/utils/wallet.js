@@ -29,7 +29,7 @@ export default class Wallet {
     const address = await stores.wallet.getAddress();
     const hasSaved = await secureStore.fetch(address);
     if (!hasSaved) {
-      await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
+      await Wallet.destroyWallet();
       return false;
     }
     return address;
@@ -39,7 +39,7 @@ export default class Wallet {
     const address = await stores.wallet.getAddress();
     const savedData = await secureStore.fetch(address);
     if (!savedData) {
-      await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
+      await Wallet.destroyWallet();
       return false;
     }
     const decryptedBody = aes256.decrypt(password, savedData);

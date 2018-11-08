@@ -7,9 +7,8 @@ import AppLoadingScreen from 'src/screens/AppLoadingScreen';
 import RecoverScreen from 'src/screens/account/RecoverScreen';
 
 export default createSwitchNavigator({
-    AppLoadingScreen,
-    NewAccount: NewAccountNavigator,
-    RecoverAccount: RecoverScreen,
-    Main: MainTabNavigator,
-  },
-);
+  AppLoadingScreen,
+  NewAccount: NewAccountNavigator,
+  RecoverAccount: RecoverScreen,
+  Main: MainTabNavigator,
+});
