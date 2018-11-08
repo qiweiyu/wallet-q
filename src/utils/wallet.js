@@ -2,8 +2,30 @@ import bip39 from 'bip39';
 import bip32 from 'bip32';
 import qtum from 'qtumjs-lib';
 import bitcoin from 'bitcoinjs-lib';
+import * as Keychain from 'react-native-keychain';
 
 const qtumNetwork = qtum.networks.qtum;
+
+const test = async () => {
+  const username = 'zuck';
+  const password = 'poniesRgr8';
+
+  // Store the credentials
+  await Keychain.setGenericPassword(username, password);
+
+  try {
+    // Retreive the credentials
+    const credentials = await Keychain.getGenericPassword();
+    if (credentials) {
+      alert('Credentials successfully loaded for user ' + credentials.username);
+    } else {
+      alert('No credentials stored')
+    }
+  } catch (error) {
+    alert('Keychain couldn\'t be accessed!', error);
+  }
+  await Keychain.resetGenericPassword()
+}
 
 export default class Wallet {
   static getDefaultNetwork() {
@@ -30,6 +52,7 @@ export default class Wallet {
     const child = master.derivePath(path);
     const address = Wallet.getAddress(child, network);
     const wif = child.toWIF();
+    test();
     /*const saveBody = aes256.encrypt(password, JSON.stringify({
       address,
       mnemonic,
