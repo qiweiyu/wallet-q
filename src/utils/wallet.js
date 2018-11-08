@@ -25,6 +25,19 @@ export default class Wallet {
     return bip39.generateMnemonic();
   }
 
+  static validateMnemonic(mnemonic) {
+    return bip39.validateMnemonic(mnemonic);
+  }
+
+  static validateWif(wif) {
+    try {
+      bitcoin.ECPair.fromWIF(wif, Wallet.getDefaultNetwork());
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   static async checkLocalSavedWallet() {
     const address = await stores.wallet.getAddress();
     const hasSaved = await secureStore.fetch(address);

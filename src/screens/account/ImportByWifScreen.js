@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Image,
+  Alert,
   ScrollView,
   StyleSheet,
   View,
@@ -16,7 +16,7 @@ import Colors from 'src/constants/Colors';
 import { Container, BigButton } from 'src/components';
 
 import i18n from 'src/i18n';
-import utls from 'src/utils';
+import utils from 'src/utils';
 
 @observer
 export default class ImportByWifScreen extends React.Component {
@@ -53,6 +53,33 @@ export default class ImportByWifScreen extends React.Component {
   }
 
   _confirm = () => {
+    this.store.input = this.store.input.trim();
+    if (this.store.input === '') {
+      Alert.alert(
+        i18n.t('account.import.wifEmpty'),
+        i18n.t('account.import.wifErrorDesc'),
+        [
+          {
+            text: 'OK', onPress: () => {},
+          },
+        ],
+        { cancelable: false });
+    } else if (!utils.wallet.validateWif(this.store.input)) {
+      Alert.alert(
+        i18n.t('account.import.wifError'),
+        i18n.t('account.import.wifErrorDesc'),
+        [
+          {
+            text: 'OK', onPress: () => {},
+          },
+        ],
+        { cancelable: false });
+    } else {
+      this._goToSetPassword();
+    }
+  };
+
+  _goToSetPassword = () => {
     this.props.navigation.navigate('SetPassword', {
       from: 'wif',
       wif: this.store.input,
@@ -65,7 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 30 + Layout.appBarHeight,
   },
   inputContainer: {
-    margin: 20,
+    margin: 40,
   },
   inputLabel: {
     fontSize: 17,

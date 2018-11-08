@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Image,
+  Alert,
   ScrollView,
   StyleSheet,
   View,
@@ -16,7 +16,7 @@ import Colors from 'src/constants/Colors';
 import { Container, BigButton } from 'src/components';
 
 import i18n from 'src/i18n';
-import utls from 'src/utils';
+import utils from 'src/utils';
 
 @observer
 export default class ImportByMnemonicScreen extends React.Component {
@@ -27,7 +27,7 @@ export default class ImportByMnemonicScreen extends React.Component {
   @observable
   store = {
     input: '',
-    path: utls.wallet.getDefaultDerivePath(),
+    path: utils.wallet.getDefaultDerivePath(),
   };
 
   render() {
@@ -38,7 +38,7 @@ export default class ImportByMnemonicScreen extends React.Component {
             <Text style={styles.inputLabel}>{i18n.t('account.import.mnemonicLabel')}</Text>
             <TextInput
               style={styles.input}
-              underlineColorAndroid={"transparent"}
+              underlineColorAndroid={'transparent'}
               editable={true}
               multiline={true}
               value={this.store.input}
@@ -61,6 +61,38 @@ export default class ImportByMnemonicScreen extends React.Component {
   }
 
   _confirm = () => {
+    if (this.store.input === '') {
+      Alert.alert(
+        i18n.t('account.import.mnemonicEmpty'),
+        i18n.t('account.import.mnemonicErrorDesc'),
+        [
+          {
+            text: 'Cancel', onPress: () => {},
+          },
+          {
+            text: 'OK', onPress: () => {this._goToSetPassword();},
+          },
+        ],
+        { cancelable: false });
+    } else if (!utils.wallet.validateMnemonic(this.store.input)) {
+      Alert.alert(
+        i18n.t('account.import.mnemonicError'),
+        i18n.t('account.import.mnemonicErrorDesc'),
+        [
+          {
+            text: 'Cancel', onPress: () => {},
+          },
+          {
+            text: 'OK', onPress: () => {this._goToSetPassword();},
+          },
+        ],
+        { cancelable: false });
+    } else {
+      this._goToSetPassword();
+    }
+  };
+
+  _goToSetPassword = () => {
     this.props.navigation.navigate('SetPassword', {
       from: 'mnemonic',
       mnemonic: this.store.input,
@@ -74,7 +106,7 @@ const styles = StyleSheet.create({
     paddingTop: 30 + Layout.appBarHeight,
   },
   inputContainer: {
-    margin: 20,
+    margin: 40,
   },
   inputLabel: {
     fontSize: 17,

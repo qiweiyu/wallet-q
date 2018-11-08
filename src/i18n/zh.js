@@ -28,6 +28,12 @@ export default {
       mnemonicLabel: '请输入助记词(以空格分隔)',
       pathLabel: 'HD钱包路径',
       confirm: '确认导入钱包',
+      mnemonicEmpty: '助记词为空',
+      mnemonicError: '助记词不是标准助记词',
+      mnemonicErrorDesc: '这样也可以导入钱包，请您再次确认就按这个助记词导入吗？',
+      wifEmpty: '私钥为空',
+      wifError: '私钥无法解码',
+      wifErrorDesc: '请输入正确的私钥然后重试',
     },
   },
 };

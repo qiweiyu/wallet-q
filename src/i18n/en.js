@@ -28,6 +28,12 @@ export default {
       mnemonicLabel: 'Please input mnemonics(Split by space)',
       pathLabel: 'HD Wallet Path',
       confirm: 'Confirm import',
+      mnemonicEmpty: 'Mnemonic is Empty',
+      mnemonicError: 'Mnemonics are not standard mnemonic words',
+      mnemonicErrorDesc: 'But it can also create a wallet as well, do you confirm to go?',
+      wifEmpty: 'Private Key is Empty',
+      wifError: 'Private Key cannot be decoded',
+      wifErrorDesc: 'Please input the right private key',
     }
   },
 };
