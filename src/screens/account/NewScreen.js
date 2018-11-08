@@ -4,10 +4,11 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  Text,
 } from 'react-native';
 import Layout from 'src/constants/Layout';
 
-import { Container, BigButton, MonoText } from 'src/components';
+import { Container, BigButton } from 'src/components';
 
 import logo from 'assets/images/icon.png';
 import i18n from 'src/i18n';
@@ -29,10 +30,10 @@ export default class NewScreen extends React.Component {
           </View>
 
           <View style={styles.getStartedContainer}>
-            <MonoText style={styles.getStartedText}>{i18n.t('account.new.welcome1')}</MonoText>
+            <Text style={styles.getStartedText}>{i18n.t('account.new.welcome1')}</Text>
 
             <View style={styles.sloganContainer}>
-              <MonoText>{i18n.t('account.new.welcome2')}</MonoText>
+              <Text>{i18n.t('account.new.welcome2')}</Text>
             </View>
           </View>
 

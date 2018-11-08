@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import {observer, inject} from 'mobx-react';
 
-import { MonoText } from 'src/components/StyledText';
-
 import i18n from 'src/i18n';
 
 @inject('stores')@observer
@@ -43,7 +41,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.getStartedText}>{this.props.stores.wallet.address}</Text>
 
             <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
+              <Text style={styles.codeHighlightText}>screens/HomeScreen.js</Text>
             </View>
 
             <Text style={styles.getStartedText}>

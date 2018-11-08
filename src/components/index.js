@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import Styles from 'src/styles';
 import Colors from 'src/constants/Colors';
-import { MonoText } from './StyledText';
 
 export class Container extends React.Component {
   render() {
@@ -28,10 +27,8 @@ export class BigButton extends React.Component {
         this.props.onPress ? this.props.onPress : () => {
         }
       }>
-        <MonoText style={Styles.common.buttonText}>{this.props.children}</MonoText>
+        <Text style={Styles.common.buttonText}>{this.props.children}</Text>
       </TouchableOpacity>
     </View>;
   }
 }
-
-export { MonoText };
