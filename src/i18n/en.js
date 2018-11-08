@@ -4,7 +4,8 @@ export default {
       welcome1: 'Welcome to Wallet·Q',
       welcome2: 'THE GATE TO BLOCKCHAIN',
       create: 'Create A New Wallet',
-      import: 'Import Wallet',
+      importByMnemonic: 'Import Wallet By Mnemonic',
+      importByWif: 'Import Wallet By Private Key (WIF)',
     },
     create: {
       title: 'Create New Wallet',
@@ -22,5 +23,11 @@ export default {
       logoutDesc: 'Logout will destroy the private data stores in this device, please ensure you have backed up your private key or mnemonics',
       unlockSuccess: 'Unlock Success',
     },
+    import: {
+      wifLabel: 'Please input private key (WIF)',
+      mnemonicLabel: 'Please input mnemonics(Split by space)',
+      pathLabel: 'HD Wallet Path',
+      confirm: 'Confirm import',
+    }
   },
 };

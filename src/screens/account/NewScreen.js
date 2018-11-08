@@ -28,20 +28,18 @@ export default class NewScreen extends React.Component {
               style={styles.welcomeImage}
             />
           </View>
-
           <View style={styles.getStartedContainer}>
             <Text style={styles.getStartedText}>{i18n.t('account.new.welcome1')}</Text>
-
             <View style={styles.sloganContainer}>
               <Text>{i18n.t('account.new.welcome2')}</Text>
             </View>
           </View>
-
         </View>
         <ScrollView/>
         <View>
           <BigButton onPress={this._goToCreateAccount}>{i18n.t('account.new.create')}</BigButton>
-          <BigButton>{i18n.t('account.new.import')}</BigButton>
+          <BigButton onPress={this._goToImportByMnemonic}>{i18n.t('account.new.importByMnemonic')}</BigButton>
+          <BigButton onPress={this._goToImportByWif}>{i18n.t('account.new.importByWif')}</BigButton>
         </View>
       </Container>
     );
@@ -49,6 +47,14 @@ export default class NewScreen extends React.Component {
 
   _goToCreateAccount = () => {
     this.props.navigation.navigate('CreateAccount');
+  };
+
+  _goToImportByMnemonic = () => {
+    this.props.navigation.navigate('ImportByMnemonic');
+  };
+
+  _goToImportByWif = () => {
+    this.props.navigation.navigate('ImportByWif');
   };
 }
 

@@ -4,7 +4,8 @@ export default {
       welcome1: '欢迎使用Wallet·Q',
       welcome2: '为您打开区块链的大门',
       create: '创建新钱包',
-      import: '导入已有钱包',
+      importByMnemonic: '从助记词导入钱包',
+      importByWif: '从私钥(WIF)导入钱包',
     },
     create: {
       title: '创建新钱包',
@@ -21,6 +22,12 @@ export default {
       logout: '退出登录',
       logoutDesc: '退出登录将会清空本机存储的密钥信息，请确保您已经备份好了私钥或者助记词',
       unlockSuccess: '解锁成功',
+    },
+    import: {
+      wifLabel: '请输入私钥(WIF)',
+      mnemonicLabel: '请输入助记词(以空格分隔)',
+      pathLabel: 'HD钱包路径',
+      confirm: '确认导入钱包',
     },
   },
 };

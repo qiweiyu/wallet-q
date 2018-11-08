@@ -62,6 +62,8 @@ export default class Wallet {
       address,
       mnemonic,
       wif,
+      path,
+      network
     }));
     await Promise.all([secureStore.save(address, saveBody), stores.wallet.setAddress(address)]);
     return true;
