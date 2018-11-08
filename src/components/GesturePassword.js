@@ -1,20 +1,17 @@
 import React from 'react';
-import { Platform, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import RNGesturePassword from 'react-native-smart-gesture-password-angeloslex';
 import Colors from 'src/constants/Colors';
+import Layout from 'src/constants/Layout';
 
 export class GesturePassword extends React.Component {
   _calAdjustHeight() {
-    // next two line copy from react-navigation-stack/dist/view/Header/Header.js
-    const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
-    const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
-
     let height = 0;
     if (this.props.hasHeader) {
-      height += APPBAR_HEIGHT;
+      height += Layout.appBarHeight;
     }
     if (this.props.hasStatusBar) {
-      height += STATUSBAR_HEIGHT;
+      height += Layout.statusBarHeight;
     }
     return height;
   }

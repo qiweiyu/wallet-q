@@ -3,7 +3,7 @@ import { observable, action, set } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import {
   ScrollView,
-  View
+  View,
 } from 'react-native';
 
 import { Container, BigButton } from 'src/components';
@@ -11,7 +11,7 @@ import { GesturePassword } from 'src/components/GesturePassword';
 
 import i18n from 'src/i18n';
 
-@inject('stores')@observer
+@inject('stores') @observer
 export default class CreateScreen extends React.Component {
   static navigationOptions = {
     title: i18n.t('account.create.title'),
@@ -27,13 +27,13 @@ export default class CreateScreen extends React.Component {
 
   render() {
     //utils.wallet.encryptAndSaveMnemonic('1 1 1 1 2 2 2 2', '123456');
-    //console.log(aes256);
     return (
       <Container>
-        <ScrollView>
+        <View style={{ height: 400 }}>
           {this.store.step === 1 && this._renderGesturePassword(i18n.t('account.create.setGesturePassword'), i18n.t('account.create.gesturePasswordRule'), this._setPassword, this.store.setWarning)}
           {this.store.step === 2 && this._renderGesturePassword(i18n.t('account.create.repeatGesturePassword'), i18n.t('account.create.repeatPasswordFail'), this._checkRepeatPassword, this.store.checkWarning)}
-        </ScrollView>
+        </View>
+        <ScrollView/>
         {this.store.step === 2 && (
           <View>
             <BigButton type={'warning'} onPress={this._resetPassword}>
@@ -50,6 +50,7 @@ export default class CreateScreen extends React.Component {
       <GesturePassword
         paddingTop={50}
         hasHeader={true}
+        hasStatusBar={true}
         isWarning={isWarning}
         onFinish={onFinish}
         warningMessage={warningMessage}

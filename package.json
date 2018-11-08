@@ -8,7 +8,6 @@
     "postinstall": "rn-nodeify --install --hack"
   },
   "dependencies": {
-    "jsc-android": "236355.x.x",
     "@babel/plugin-proposal-decorators": "^7.1.2",
     "@tradle/react-native-http": "^2.0.1",
     "assert": "^1.4.1",
@@ -21,6 +20,7 @@
     "events": "^1.1.1",
     "https-browserify": "0.0.1",
     "i18n-js": "^3.1.0",
+    "jsc-android": "236355.x.x",
     "mobx": "^5.6.0",
     "mobx-react": "^5.3.6",
     "path-browserify": "0.0.0",
@@ -45,6 +45,7 @@
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "util": "^0.10.4",
+    "vm": "^0.1.0",
     "vm-browserify": "0.0.4"
   },
   "devDependencies": {

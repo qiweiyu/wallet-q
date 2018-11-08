@@ -1,9 +1,8 @@
-import crypto from 'crypto';
-//import Buffer from 'buffer';
+import crypto from 'react-native-crypto';
 
 const CIPHER_ALGORITHM = 'aes-256-ctr';
 
-const aes256 = {
+export const aes256 = {
   encrypt: (key, plaintext) => {
     if (typeof key !== 'string' || !key) {
       throw 'Provided "key" must be a non-empty string';
@@ -26,30 +25,28 @@ const aes256 = {
   },
   decrypt: function (key, encrypted) {
     if (typeof key !== 'string' || !key) {
-      throw new TypeError('Provided "key" must be a non-empty string');
+      throw 'Provided "key" must be a non-empty string';
     }
     if (typeof encrypted !== 'string' || !encrypted) {
-      throw new TypeError('Provided "encrypted" must be a non-empty string');
+      throw 'Provided "encrypted" must be a non-empty string';
     }
 
-    var sha256 = crypto.createHash('sha256');
+    const sha256 = crypto.createHash('sha256');
     sha256.update(key);
 
-    var input = new Buffer(encrypted, 'base64');
+    const input = new Buffer(encrypted, 'base64');
 
     if (input.length < 17) {
-      throw new TypeError('Provided "encrypted" must decrypt to a non-empty string');
+      throw 'Provided "encrypted" must decrypt to a non-empty string';
     }
 
     // Initialization Vector
-    var iv = input.slice(0, 16);
-    var decipher = crypto.createDecipheriv(CIPHER_ALGORITHM, sha256.digest(), iv);
+    const iv = input.slice(0, 16);
+    const decipher = crypto.createDecipheriv(CIPHER_ALGORITHM, sha256.digest(), iv);
 
-    var ciphertext = input.slice(16);
-    var plaintext = decipher.update(ciphertext) + decipher.final();
+    const ciphertext = input.slice(16);
+    const plaintext = decipher.update(ciphertext) + decipher.final();
 
     return plaintext;
   },
 };
-
-export default aes256;

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import Layout from 'src/constants/Layout';
 
 import { Container, BigButton, MonoText } from 'src/components';
 
@@ -19,7 +20,7 @@ export default class NewScreen extends React.Component {
   render() {
     return (
       <Container>
-        <ScrollView style={styles.contentContainer}>
+        <View style={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <Image
               source={logo}
@@ -35,7 +36,8 @@ export default class NewScreen extends React.Component {
             </View>
           </View>
 
-        </ScrollView>
+        </View>
+        <ScrollView/>
         <View>
           <BigButton onPress={this._goToCreateAccount}>{i18n.t('account.new.create')}</BigButton>
           <BigButton>{i18n.t('account.new.import')}</BigButton>
@@ -51,7 +53,7 @@ export default class NewScreen extends React.Component {
 
 const styles = StyleSheet.create({
     contentContainer: {
-      paddingTop: 30,
+      paddingTop: 30 + Layout.appBarHeight,
     },
     welcomeContainer: {
       alignItems: 'center',
