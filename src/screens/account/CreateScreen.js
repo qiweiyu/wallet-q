@@ -27,9 +27,6 @@ export default class CreateScreen extends React.Component {
   };
 
   render() {
-    const res = utils.wallet.encryptAndSaveMnemonic('1 1 1 1 2 2 2 2', '123456').then((res) => {
-      alert(res);
-    });
     return (
       <Container>
         <View style={{ height: 400 }}>
@@ -84,13 +81,9 @@ export default class CreateScreen extends React.Component {
       this.store.checkWarning = false;
       this.store.checkWarning = true;
     } else {
-      // todo
-      /*
-      1. generate an address
-      2. use password to encrypt the wif and mnemonic
-      3. navigate to the home screen
-       */
-      this.props.navigation.navigate('Home');
+      utils.wallet.encryptAndSaveMnemonic(utils.wallet.generateMnemonic(), password).then(() => {
+        this.props.navigation.navigate('Home');
+      });
     }
   };
 
