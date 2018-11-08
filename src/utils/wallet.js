@@ -25,6 +25,16 @@ export default class Wallet {
     return bip39.generateMnemonic();
   }
 
+  static async checkLocalSavedWallet() {
+    const address = await stores.wallet.getAddress();
+    const hasSaved = await secureStore.fetch(address);
+    if (!hasSaved) {
+      await Promise.all([secureStore.reset(), stores.wallet.setAddress('')]);
+      return '';
+    }
+    return address;
+  }
+
   static async encryptAndSaveMnemonic(mnemonic, password, path, network) {
     path = path || Wallet.getDefaultDerivePath();
     network = network || Wallet.getDefaultNetwork();

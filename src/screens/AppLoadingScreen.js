@@ -5,24 +5,18 @@ import {
   View,
 } from 'react-native';
 import Layout from 'src/constants/Layout';
+import utils from 'src/utils';
 
 export default class AppLoadingScreen extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
+
   componentDidMount() {
-    const onStart = this.props.onStart ? this.props.onStart : () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {resolve();}, 3000);
-      })
-    };
-    const onFinish = this.props.onFinish ? this.props.onFinish : () => {};
-    const loadingRes = onStart();
-    if (loadingRes instanceof Promise) {
-      loadingRes.then((res) => {
-        onFinish(res);
-      });
-    } else {
-      onFinish(loadingRes);
-    }
-  }
+    this._loading().then(() => {
+      this.props.navigation.navigate('RecoverAccount');
+    });
+  };
 
   render() {
     return (
@@ -36,6 +30,10 @@ export default class AppLoadingScreen extends React.Component {
       </View>
     );
   }
+
+  _loading = async () => {
+    await utils.wallet.checkLocalSavedWallet();
+  };
 }
 
 const styles = StyleSheet.create({

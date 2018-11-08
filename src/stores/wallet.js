@@ -19,4 +19,18 @@ export default class Wallet {
       return false;
     }
   }
+
+  @action
+  async getAddress() {
+    try {
+      const address = await AsyncStorage.getItem('address');
+      this.address = address;
+      return address;
+    } catch (error) {
+      log.fatal('async storage get address error', {
+        error,
+      });
+      return this.address;
+    }
+  }
 }
