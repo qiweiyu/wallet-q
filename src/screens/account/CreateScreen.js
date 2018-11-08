@@ -50,7 +50,6 @@ export default class CreateScreen extends React.Component {
       <GesturePassword
         paddingTop={50}
         hasHeader={true}
-        hasStatusBar={true}
         isWarning={isWarning}
         onFinish={onFinish}
         warningMessage={warningMessage}
@@ -87,6 +86,7 @@ export default class CreateScreen extends React.Component {
     }
   };
 
+  @action
   _resetPassword = () => {
     set(this.store, {
       step: 1,

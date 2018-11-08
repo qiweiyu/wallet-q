@@ -4,6 +4,8 @@ import { log } from 'src/utils';
 
 export default class Wallet {
   @observable address = '';
+  @observable hasWif = false;
+  @observable hasMnemonic = false;
 
   @action
   async setAddress(address) {
@@ -31,6 +33,22 @@ export default class Wallet {
         error,
       });
       return this.address;
+    }
+  }
+
+  @action
+  async delAddress() {
+    try {
+      await AsyncStorage.removeItem('address');
+      this.address = '';
+      this.hasWif = false;
+      this.hasMnemonic = false;
+      return true;
+    } catch (error) {
+      log.warning('async storage remove address error', {
+        error,
+      });
+      return false;
     }
   }
 }

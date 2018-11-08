@@ -6,7 +6,9 @@ import {
 } from 'react-native';
 import Layout from 'src/constants/Layout';
 import utils from 'src/utils';
+import { inject, observer } from 'mobx-react';
 
+@inject('stores')@observer
 export default class AppLoadingScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -14,7 +16,11 @@ export default class AppLoadingScreen extends React.Component {
 
   componentDidMount() {
     this._loading().then(() => {
-      this.props.navigation.navigate('RecoverAccount');
+      let nextScreen = 'NewAccount';
+      if (this.props.stores.wallet.address) {
+        nextScreen = 'RecoverAccount';
+      }
+      this.props.navigation.navigate(nextScreen);
     });
   };
 

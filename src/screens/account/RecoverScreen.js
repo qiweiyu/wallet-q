@@ -2,12 +2,16 @@ import React from 'react';
 import { observable, action, set } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import {
+  Alert,
+  Image,
   ScrollView,
   View,
+  StyleSheet,
 } from 'react-native';
 
 import { Container, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
+import logo from 'assets/images/icon.png';
 
 import i18n from 'src/i18n';
 import utils from 'src/utils';
@@ -15,84 +19,86 @@ import utils from 'src/utils';
 @inject('stores') @observer
 export default class RecoverScreen extends React.Component {
   static navigationOptions = {
-    title: i18n.t('account.create.title'),
+    header: null,
   };
 
   @observable
   store = {
-    step: 1,
-    password: '',
-    setWarning: false,
-    checkWarning: false,
+    isError: false,
   };
 
   render() {
     return (
       <Container>
-        <View style={{ height: 400 }}>
-          {this.store.step === 1 && this._renderGesturePassword(i18n.t('account.create.setGesturePassword'), i18n.t('account.create.gesturePasswordRule'), this._setPassword, this.store.setWarning)}
-          {this.store.step === 2 && this._renderGesturePassword(i18n.t('account.create.repeatGesturePassword'), i18n.t('account.create.repeatPasswordFail'), this._checkRepeatPassword, this.store.checkWarning)}
+        <View style={styles.logoContainer}>
+          <Image source={logo} style={styles.logo}></Image>
+        </View>
+        <View style={styles.passwordArea}>
+          <GesturePassword
+            hasHeader={false}
+            isWarning={this.store.isError}
+            top={120}
+            onFinish={this._checkPassword}
+            message={i18n.t('account.recover.drawGestureToUnlock')}
+            warningMessage={i18n.t('account.recover.drawGestureError')}
+          />
         </View>
         <ScrollView/>
-        {this.store.step === 2 && (
-          <View>
-            <BigButton type={'warning'} onPress={this._resetPassword}>
-              {i18n.t('account.create.resetPassword')}
-            </BigButton>
-          </View>
-        )}
+        <View>
+          <BigButton type={'danger'} onPress={this._logout}>
+            {i18n.t('account.recover.logout')}
+          </BigButton>
+        </View>
       </Container>
     );
   }
 
-  _renderGesturePassword(message, warningMessage, onFinish, isWarning) {
-    return (
-      <GesturePassword
-        paddingTop={50}
-        hasHeader={true}
-        hasStatusBar={true}
-        isWarning={isWarning}
-        onFinish={onFinish}
-        warningMessage={warningMessage}
-        message={message}
-        desc={i18n.t('account.create.gesturePasswordDesc')}
-      />
-    );
-  }
-
   @action
-  _setPassword = (password) => {
-    if (password.length < 4) {
-      //如果不先重置为false，那么再次错误线不会变色
-      this.store.setWarning = false;
-      this.store.setWarning = true;
-    } else {
-      set(this.store, {
-        step: 2,
-        password,
-      });
-    }
-  };
-
-  @action
-  _checkRepeatPassword = (password) => {
-    if (password !== this.store.password) {
-      //如果不先重置为false，那么再次错误线不会变色
-      this.store.checkWarning = false;
-      this.store.checkWarning = true;
-    } else {
-      utils.wallet.encryptAndSaveMnemonic(utils.wallet.generateMnemonic(), password).then(() => {
+  _checkPassword = (password) => {
+    utils.wallet.decryptLocalSavedWallet(password).then(res => {
+      if (!res) {
+        this.store.isError = false;
+        this.store.isError = true;
+      } else {
+        this.props.stores.wallet.hasWif = !!res.wif;
+        this.props.stores.wallet.hasMnemonic = !!res.mnemonic;
         this.props.navigation.navigate('Home');
-      });
-    }
-  };
-
-  _resetPassword = () => {
-    set(this.store, {
-      step: 1,
-      password: '',
-      setWarning: false,
-      checkWarning: false,
+      }
     });
   };
+
+  @action
+  _logout = () => {
+    Alert.alert(
+      i18n.t('account.recover.logout'),
+      i18n.t('account.recover.logoutDesc'),
+      [
+        {
+          text: 'Cancel', onPress: () => {
+        },
+        },
+        { text: 'OK', onPress: () => {
+          utils.wallet.destroyWallet().then(() => {
+            this.props.navigation.navigate('NewAccount');
+          });
+        } },
+      ],
+      { cancelable: false });
+  };
 }
+
+const styles = StyleSheet.create({
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+  },
+  passwordArea: {
+    height: 300,
+  }
+});

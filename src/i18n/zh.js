@@ -14,6 +14,12 @@ export default {
       repeatGesturePassword: '请再输入一次进行验证',
       repeatPasswordFail: '验证密码失败',
       resetPassword: '重新设置密码',
-    }
+    },
+    recover: {
+      drawGestureToUnlock: '绘制手势密码解锁钱包',
+      drawGestureError: '手势密码错误',
+      logout: '退出登录',
+      logoutDesc: '退出登录将会清空本机存储的密钥信息，请确保您已经备份好了私钥或者助记词',
+    },
   },
 };

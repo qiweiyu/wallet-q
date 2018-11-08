@@ -49,41 +49,40 @@ export default class NewScreen extends React.Component {
 
   _goToCreateAccount = () => {
     this.props.navigation.navigate('CreateAccount');
-  }
+  };
 }
 
 const styles = StyleSheet.create({
-    contentContainer: {
-      paddingTop: 30 + Layout.appBarHeight,
-    },
-    welcomeContainer: {
-      alignItems: 'center',
-      marginTop: 10,
-      marginBottom: 20,
-    },
-    welcomeImage: {
-      width: 100,
-      height: 80,
-      resizeMode: 'contain',
-      marginTop: 3,
-      marginLeft: -10,
-    },
-    getStartedContainer: {
-      alignItems: 'center',
-      marginHorizontal: 50,
-    },
-    getStartedText: {
-      fontSize: 17,
-      color: 'rgba(96,100,109, 1)',
-      lineHeight: 24,
-      textAlign: 'center',
-    },
-    sloganContainer: {
-      marginVertical: 7,
-      color: 'rgba(96,100,109, 0.8)',
-      backgroundColor: 'rgba(0,0,0,0.05)',
-      borderRadius: 3,
-      paddingHorizontal: 4,
-    },
-  })
-;
+  contentContainer: {
+    paddingTop: 30 + Layout.appBarHeight,
+  },
+  welcomeContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  welcomeImage: {
+    width: 100,
+    height: 80,
+    resizeMode: 'contain',
+    marginTop: 3,
+    marginLeft: -10,
+  },
+  getStartedContainer: {
+    alignItems: 'center',
+    marginHorizontal: 50,
+  },
+  getStartedText: {
+    fontSize: 17,
+    color: 'rgba(96,100,109, 1)',
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  sloganContainer: {
+    marginVertical: 7,
+    color: 'rgba(96,100,109, 0.8)',
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 3,
+    paddingHorizontal: 4,
+  },
+});

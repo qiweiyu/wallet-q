@@ -29,10 +29,25 @@ export default class Wallet {
     const address = await stores.wallet.getAddress();
     const hasSaved = await secureStore.fetch(address);
     if (!hasSaved) {
-      await Promise.all([secureStore.reset(), stores.wallet.setAddress('')]);
-      return '';
+      await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
+      return false;
     }
     return address;
+  }
+
+  static async decryptLocalSavedWallet(password) {
+    const address = await stores.wallet.getAddress();
+    const savedData = await secureStore.fetch(address);
+    if (!savedData) {
+      await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
+      return false;
+    }
+    const decryptedBody = aes256.decrypt(password, savedData);
+    try {
+      return JSON.parse(decryptedBody);
+    } catch (error) {
+      return false;
+    }
   }
 
   static async encryptAndSaveMnemonic(mnemonic, password, path, network) {
@@ -54,5 +69,9 @@ export default class Wallet {
 
   static encryptWif(wif, password) {
     return bip39.generateMnemonic();
+  }
+
+  static async destroyWallet() {
+    await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
   }
 }

@@ -6,12 +6,9 @@ import Layout from 'src/constants/Layout';
 
 export class GesturePassword extends React.Component {
   _calAdjustHeight() {
-    let height = 0;
+    let height = Layout.statusBarHeight + (this.props.top ? this.props.top : 0);
     if (this.props.hasHeader) {
       height += Layout.appBarHeight;
-    }
-    if (this.props.hasStatusBar) {
-      height += Layout.statusBarHeight;
     }
     return height;
   }
@@ -31,8 +28,9 @@ export class GesturePassword extends React.Component {
   };
 
   render() {
+    const paddingTop = this.props.paddingTop ? this.props.paddingTop : 0;
     return <RNGesturePassword
-      style={{ paddingTop: this._calAdjustHeight() + this.props.paddingTop, marginTop: -1 * this._calAdjustHeight() }}
+      style={{ paddingTop: this._calAdjustHeight() + paddingTop, marginTop: -1 * this._calAdjustHeight() }}
       pointBackgroundColor={'#F4F4F4'}
       color={'#A9A9A9'}
       activeColor={Colors.primary}
