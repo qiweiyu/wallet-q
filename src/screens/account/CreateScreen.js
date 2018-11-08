@@ -10,6 +10,7 @@ import { Container, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
 
 import i18n from 'src/i18n';
+import utils from 'src/utils';
 
 @inject('stores') @observer
 export default class CreateScreen extends React.Component {
@@ -26,7 +27,9 @@ export default class CreateScreen extends React.Component {
   };
 
   render() {
-    //utils.wallet.encryptAndSaveMnemonic('1 1 1 1 2 2 2 2', '123456');
+    const res = utils.wallet.encryptAndSaveMnemonic('1 1 1 1 2 2 2 2', '123456').then((res) => {
+      alert(res);
+    });
     return (
       <Container>
         <View style={{ height: 400 }}>
