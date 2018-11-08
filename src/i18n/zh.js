@@ -20,6 +20,7 @@ export default {
       drawGestureError: '手势密码错误',
       logout: '退出登录',
       logoutDesc: '退出登录将会清空本机存储的密钥信息，请确保您已经备份好了私钥或者助记词',
+      unlockSuccess: '解锁成功',
     },
   },
 };

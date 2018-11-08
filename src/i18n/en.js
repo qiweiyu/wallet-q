@@ -20,6 +20,7 @@ export default {
       drawGestureError: 'Gesture Password is wrong',
       logout: 'LOGOUT',
       logoutDesc: 'Logout will destroy the private data stores in this device, please ensure you have backed up your private key or mnemonics',
+      unlockSuccess: 'Unlock Success',
     },
   },
 };

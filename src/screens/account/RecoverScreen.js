@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+import Toast from 'react-native-simple-toast';
 
 import { Container, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
@@ -60,8 +61,11 @@ export default class RecoverScreen extends React.Component {
         this.store.isError = false;
         this.store.isError = true;
       } else {
-        this.props.stores.wallet.hasWif = !!res.wif;
-        this.props.stores.wallet.hasMnemonic = !!res.mnemonic;
+        set(this.props.stores.wallet, {
+          hasWif: !!res.wif,
+          hasMnemonic: !!res.mnemonic
+        });
+        Toast.show(i18n.t('account.recover.unlockSuccess'));
         this.props.navigation.navigate('Home');
       }
     });

@@ -6,8 +6,8 @@ import {
   View,
   Text,
 } from 'react-native';
-import Layout from 'src/constants/Layout';
 
+import Layout from 'src/constants/Layout';
 import { Container, BigButton } from 'src/components';
 
 import logo from 'assets/images/icon.png';
