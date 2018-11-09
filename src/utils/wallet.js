@@ -82,8 +82,17 @@ export default class Wallet {
     return true;
   }
 
-  static encryptWif(wif, password) {
-    return bip39.generateMnemonic();
+  static async encryptAndSaveWif(wif, password, network) {
+    network = network || Wallet.getDefaultNetwork();
+    const keyPair = bitcoin.ECPair.fromWIF(wif);
+    const address = Wallet.getAddress(keyPair, network);
+    const saveBody = aes256.encrypt(password, JSON.stringify({
+      address,
+      wif,
+      network
+    }));
+    await Promise.all([secureStore.save(address, saveBody), stores.wallet.setAddress(address)]);
+    return true;
   }
 
   static async destroyWallet() {

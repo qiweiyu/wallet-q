@@ -46,7 +46,7 @@ export default class NewScreen extends React.Component {
   }
 
   _goToCreateAccount = () => {
-    this.props.navigation.navigate('CreateAccount');
+    this.props.navigation.navigate('SetPassword');
   };
 
   _goToImportByMnemonic = () => {

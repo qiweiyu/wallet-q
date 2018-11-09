@@ -16,7 +16,7 @@ import i18n from 'src/i18n';
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam('otherParam', 'A Nested Details Screen'),
+      title: 'Wallet Info',
     };
   };
 
@@ -26,71 +26,19 @@ export default class HomeScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <Image
-              source={
-                __DEV__
-                  ? require('assets/images/robot-dev.png')
-                  : require('assets/images/robot-prod.png')
-              }
+              source={require('assets/images/icon.png')}
               style={styles.welcomeImage}
             />
           </View>
-
           <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
-
-            <Text style={styles.getStartedText}>{this.props.stores.wallet.address}</Text>
-
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <Text style={styles.codeHighlightText}>screens/HomeScreen.js</Text>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-              {i18n.t('foo')} {i18n.t('bar', { someValue: Date.now() })}
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload! 123</Text>
-            </TouchableOpacity>
+            <Text style={styles.getStartedText}>You address: {this.props.stores.wallet.address}</Text>
+            <Text style={styles.getStartedText}>Has Wif: {this.props.stores.wallet.hasWif ? 'true' : 'false'}</Text>
+            <Text style={styles.getStartedText}>Has Mnemonic: {this.props.stores.wallet.hasMnemonic ? 'true' : 'false'}</Text>
           </View>
         </ScrollView>
-
       </View>
     );
   }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    this.props.navigation.setParams({otherParam: 'Updated!'});
-  };
-
-  _handleHelpPress = () => {
-    this.props.navigation.push('Home');
-  };
 }
 
 const styles = StyleSheet.create({
