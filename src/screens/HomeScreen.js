@@ -8,11 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {observer, inject} from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { AuthScreen } from 'src/components';
 import i18n from 'src/i18n';
+import { hashAvatar } from 'src/utils/encrypt';
 
-@inject('stores')@observer
+@inject('stores') @observer
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -26,14 +27,15 @@ export default class HomeScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <Image
-              source={require('assets/images/icon.png')}
+              source={{ uri: hashAvatar(this.props.stores.wallet.address) }}
               style={styles.welcomeImage}
             />
           </View>
           <View style={styles.getStartedContainer}>
             <Text style={styles.getStartedText}>You address: {this.props.stores.wallet.address}</Text>
             <Text style={styles.getStartedText}>Has Wif: {this.props.stores.wallet.hasWif ? 'true' : 'false'}</Text>
-            <Text style={styles.getStartedText}>Has Mnemonic: {this.props.stores.wallet.hasMnemonic ? 'true' : 'false'}</Text>
+            <Text style={styles.getStartedText}>Has
+              Mnemonic: {this.props.stores.wallet.hasMnemonic ? 'true' : 'false'}</Text>
           </View>
         </ScrollView>
       </AuthScreen>

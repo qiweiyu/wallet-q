@@ -1,4 +1,5 @@
 import crypto from 'react-native-crypto';
+import Identicon from 'identicon.js';
 
 const CIPHER_ALGORITHM = 'aes-256-ctr';
 
@@ -49,4 +50,10 @@ export const aes256 = {
 
     return plaintext;
   },
+};
+
+export const hashAvatar = (str) => {
+  const hash = crypto.createHash('md5');
+  hash.update(str);
+  return `data:image/png;base64,${new Identicon(hash.digest('hex')).toString()}`;
 };

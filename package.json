@@ -23,6 +23,7 @@
     "events": "^1.1.1",
     "https-browserify": "0.0.1",
     "i18n-js": "^3.1.0",
+    "identicon.js": "^2.3.3",
     "jsc-android": "236355.x.x",
     "mobx": "^5.6.0",
     "mobx-react": "^5.3.6",
