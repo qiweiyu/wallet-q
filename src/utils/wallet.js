@@ -8,51 +8,49 @@ import stores from 'src/stores';
 
 const qtumNetwork = qtum.networks.qtum;
 
-export default class Wallet {
-  static getDefaultNetwork() {
+export default {
+  getDefaultNetwork: () => {
     return qtumNetwork;
-  }
+  },
 
-  static getDefaultDerivePath() {
+  getDefaultDerivePath: () => {
     return 'm/88\'/0\'/0\'';
-  }
+  },
 
-  static getAddress(node, network) {
-    return bitcoin.payments.p2pkh({ pubkey: node.publicKey, network }).address;
-  }
-
-  static generateMnemonic() {
+  getAddress:
+    (node, network) => {
+      return bitcoin.payments.p2pkh({ pubkey: node.publicKey, network }).address;
+    },
+  generateMnemonic: () => {
     return bip39.generateMnemonic();
   }
-
-  static validateMnemonic(mnemonic) {
+  ,
+  validateMnemonic: (mnemonic) => {
     return bip39.validateMnemonic(mnemonic);
-  }
-
-  static validateWif(wif) {
+  },
+  validateWif: (wif) => {
     try {
-      bitcoin.ECPair.fromWIF(wif, Wallet.getDefaultNetwork());
+      bitcoin.ECPair.fromWIF(wif, this.getDefaultNetwork());
       return true;
     } catch (error) {
       return false;
     }
-  }
+  },
 
-  static async checkLocalSavedWallet() {
+  checkLocalSavedWallet: async () => {
     const address = await stores.wallet.getAddress();
     const hasSaved = await secureStore.fetch(address);
     if (!hasSaved) {
-      await Wallet.destroyWallet();
+      await this.destroyWallet();
       return false;
     }
     return address;
-  }
-
-  static async decryptLocalSavedWallet(password) {
+  },
+  decryptLocalSavedWallet: async (password) => {
     const address = await stores.wallet.getAddress();
     const savedData = await secureStore.fetch(address);
     if (!savedData) {
-      await Wallet.destroyWallet();
+      await this.destroyWallet();
       return false;
     }
     const decryptedBody = aes256.decrypt(password, savedData);
@@ -61,41 +59,41 @@ export default class Wallet {
     } catch (error) {
       return false;
     }
-  }
-
-  static async encryptAndSaveMnemonic(mnemonic, password, path, network) {
-    path = path || Wallet.getDefaultDerivePath();
-    network = network || Wallet.getDefaultNetwork();
+  },
+  encryptAndSaveMnemonic: async (mnemonic, password, path, network) => {
+    path = path || this.getDefaultDerivePath();
+    network = network || this.getDefaultNetwork();
     const seed = bip39.mnemonicToSeed(mnemonic);
     const master = bip32.fromSeed(seed, network);
     const child = master.derivePath(path);
-    const address = Wallet.getAddress(child, network);
+    const address = this.getAddress(child, network);
     const wif = child.toWIF();
     const saveBody = aes256.encrypt(password, JSON.stringify({
       address,
       mnemonic,
       wif,
       path,
-      network
+      network,
     }));
     await Promise.all([secureStore.save(address, saveBody), stores.wallet.setAddress(address)]);
     return true;
-  }
-
-  static async encryptAndSaveWif(wif, password, network) {
-    network = network || Wallet.getDefaultNetwork();
+  },
+  encryptAndSaveWif: async (wif, password, network) => {
+    network = network || this.getDefaultNetwork();
     const keyPair = bitcoin.ECPair.fromWIF(wif);
-    const address = Wallet.getAddress(keyPair, network);
+    const address = this.getAddress(keyPair, network);
     const saveBody = aes256.encrypt(password, JSON.stringify({
       address,
       wif,
-      network
+      network,
     }));
     await Promise.all([secureStore.save(address, saveBody), stores.wallet.setAddress(address)]);
     return true;
-  }
-
-  static async destroyWallet() {
+  },
+  destroyWallet: async () => {
     await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
-  }
-}
+  },
+  shortAddress: (address) => {
+    return `${address.substr(0, 4)}****${address.substr(-4)}`;
+  },
+};

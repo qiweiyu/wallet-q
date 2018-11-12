@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import HomeScreen from 'src/screens/HomeScreen';
+import HomeScreen from 'src/screens/wallet/HomeScreen';
 import LinksScreen from 'src/screens/LinksScreen';
 import SettingsScreen from 'src/screens/SettingsScreen';
 

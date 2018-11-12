@@ -37,4 +37,9 @@ export default {
       wifErrorDesc: 'Please input the right private key',
     }
   },
+  wallet: {
+    home: {
+      title: 'Wallet',
+    },
+  }
 };

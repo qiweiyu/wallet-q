@@ -37,4 +37,9 @@ export default {
       wifErrorDesc: '请输入正确的私钥然后重试',
     },
   },
+  wallet: {
+    home: {
+      title: '钱包',
+    },
+  }
 };
