@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 
-import { Container, BigButton } from 'src/components';
+import { Screen, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
 
 import i18n from 'src/i18n';
@@ -29,7 +29,7 @@ export default class SetPasswordScreen extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Screen>
         <View style={{ height: 400 }}>
           {this.store.step === 1 && this._renderGesturePassword(i18n.t('account.setPassword.setGesturePassword'), i18n.t('account.setPassword.gesturePasswordRule'), this._setPassword, this.store.setWarning)}
           {this.store.step === 2 && this._renderGesturePassword(i18n.t('account.setPassword.repeatGesturePassword'), i18n.t('account.setPassword.repeatPasswordFail'), this._checkRepeatPassword, this.store.checkWarning)}
@@ -42,7 +42,7 @@ export default class SetPasswordScreen extends React.Component {
             </BigButton>
           </View>
         )}
-      </Container>
+      </Screen>
     );
   }
 

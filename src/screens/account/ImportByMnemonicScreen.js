@@ -12,7 +12,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 import Colors from 'src/constants/Colors';
-import { Container, BigButton } from 'src/components';
+import { Screen, BigButton } from 'src/components';
 
 import i18n from 'src/i18n';
 import utils from 'src/utils';
@@ -31,7 +31,7 @@ export default class ImportByMnemonicScreen extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Screen>
         <View style={styles.contentContainer}>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>{i18n.t('account.import.mnemonicLabel')}</Text>
@@ -55,7 +55,7 @@ export default class ImportByMnemonicScreen extends React.Component {
         <View>
           <BigButton onPress={this._confirm}>{i18n.t('account.import.confirm')}</BigButton>
         </View>
-      </Container>
+      </Screen>
     );
   }
 

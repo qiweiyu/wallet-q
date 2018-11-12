@@ -2,13 +2,13 @@ import React from 'react';
 import {
   Image,
   StyleSheet,
-  View,
 } from 'react-native';
 import Layout from 'src/constants/Layout';
 import utils from 'src/utils';
+import { Screen } from 'src/components';
 import { inject, observer } from 'mobx-react';
 
-@inject('stores')@observer
+@inject('stores') @observer
 export default class AppLoadingScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -26,14 +26,14 @@ export default class AppLoadingScreen extends React.Component {
 
   render() {
     return (
-      <View>
+      <Screen>
         <Image
           source={
             require('assets/images/splash.png')
           }
           style={styles.loading}
         />
-      </View>
+      </Screen>
     );
   }
 

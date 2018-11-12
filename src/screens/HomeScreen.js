@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import {observer, inject} from 'mobx-react';
-
+import { AuthScreen } from 'src/components';
 import i18n from 'src/i18n';
 
 @inject('stores')@observer
@@ -22,7 +22,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <AuthScreen>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <Image
@@ -36,16 +36,12 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.getStartedText}>Has Mnemonic: {this.props.stores.wallet.hasMnemonic ? 'true' : 'false'}</Text>
           </View>
         </ScrollView>
-      </View>
+      </AuthScreen>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   developmentModeText: {
     marginBottom: 20,
     color: 'rgba(0,0,0,0.4)',

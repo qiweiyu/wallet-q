@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Layout from 'src/constants/Layout';
-import { Container, BigButton } from 'src/components';
+import { Screen, BigButton } from 'src/components';
 
 import logo from 'assets/images/icon.png';
 import i18n from 'src/i18n';
@@ -20,7 +20,7 @@ export default class NewScreen extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Screen>
         <View style={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <Image
@@ -41,7 +41,7 @@ export default class NewScreen extends React.Component {
           <BigButton onPress={this._goToImportByMnemonic}>{i18n.t('account.new.importByMnemonic')}</BigButton>
           <BigButton onPress={this._goToImportByWif}>{i18n.t('account.new.importByWif')}</BigButton>
         </View>
-      </Container>
+      </Screen>
     );
   }
 

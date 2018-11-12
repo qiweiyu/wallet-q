@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 
-import { Container, BigButton } from 'src/components';
+import { Screen, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
 import logo from 'assets/images/icon.png';
 
@@ -30,7 +30,7 @@ export default class RecoverScreen extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Screen>
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logo}></Image>
         </View>
@@ -50,7 +50,7 @@ export default class RecoverScreen extends React.Component {
             {i18n.t('account.recover.logout')}
           </BigButton>
         </View>
-      </Container>
+      </Screen>
     );
   }
 
