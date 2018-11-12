@@ -11,7 +11,6 @@ import {
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import Layout from 'src/constants/Layout';
 import Colors from 'src/constants/Colors';
 import { Container, BigButton } from 'src/components';
 
@@ -103,10 +102,11 @@ export default class ImportByMnemonicScreen extends React.Component {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    paddingTop: 30 + Layout.appBarHeight,
+    paddingTop:  20
   },
   inputContainer: {
-    margin: 40,
+    marginLeft: 40,
+    marginRight: 40,
   },
   inputLabel: {
     fontSize: 17,
