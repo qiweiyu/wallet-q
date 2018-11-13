@@ -12,7 +12,7 @@ export class Container extends React.Component {
 
 export class Screen extends React.Component {
   render() {
-    return <View {...this.props} style={[this.props.style, Styles.common.container]}/>;
+    return <Container {...this.props} style={[this.props.style, Styles.common.container]}/>;
   }
 }
 

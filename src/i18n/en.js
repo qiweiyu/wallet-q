@@ -1,4 +1,12 @@
 export default {
+  common: {
+    network: {
+      failed: 'Network Connecting Error',
+      address: {
+        failed: 'Sever Wallet Address Decode Failed',
+      },
+    },
+  },
   account: {
     new: {
       welcome1: 'Welcome to Wallet·Q',
@@ -35,11 +43,11 @@ export default {
       wifEmpty: 'Private Key is Empty',
       wifError: 'Private Key cannot be decoded',
       wifErrorDesc: 'Please input the right private key',
-    }
+    },
   },
   wallet: {
     home: {
       title: 'Wallet',
     },
-  }
+  },
 };

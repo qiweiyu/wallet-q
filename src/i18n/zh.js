@@ -1,4 +1,12 @@
 export default {
+  common: {
+    network: {
+      failed: '网络连接失败',
+      address: {
+        failed: '服务端账户地址解析失败',
+      },
+    },
+  },
   account: {
     new: {
       welcome1: '欢迎使用Wallet·Q',
@@ -41,5 +49,5 @@ export default {
     home: {
       title: '钱包',
     },
-  }
+  },
 };

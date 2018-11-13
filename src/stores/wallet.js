@@ -1,11 +1,26 @@
 import { AsyncStorage } from 'react-native';
-import { observable, action } from 'mobx';
-import { log } from 'src/utils';
+import { observable, action, set } from 'mobx';
+import Model from './model';
+import log from 'src/utils/log';
+import config from 'src/config';
 
-export default class Wallet {
+export default class Wallet extends Model {
   @observable address = '';
   @observable hasWif = false;
   @observable hasMnemonic = false;
+  @observable walletInfo = {
+    balanceSat: null,
+    stakingSat: null,
+    matureSat: null,
+    totalReceivedSat: null,
+    totalSentSat: null,
+    ranking: null,
+    blocksStaked: null,
+    totalTxCount: null,
+    qrc20List: [],
+  };
+
+  apiHost = config.api.host;
 
   @action
   async setAddress(address) {
@@ -49,6 +64,28 @@ export default class Wallet {
         error,
       });
       return false;
+    }
+  }
+
+  @action
+  async fetchWalletInfo(address) {
+    try {
+      const res = await this.get(`${this.apiHost}/address/${address}`);
+      if (res) {
+        set(this.walletInfo, {
+          balanceSat: res.balance,
+          stakingSat: res.staking,
+          matureSat: res.mature,
+          totalReceivedSat: res.totalReceived,
+          totalSentSat: res.totalSent,
+          ranking: res.ranking,
+          blocksStaked: res.blocksStaked,
+          totalTxCount: res.totalCount,
+          qrc20List: res.qrc20TokenBalances ? res.qrc20TokenBalances : [],
+        });
+      }
+    } catch(error) {
+      log.warningWithToast('common.network.address.failed');
     }
   }
 }

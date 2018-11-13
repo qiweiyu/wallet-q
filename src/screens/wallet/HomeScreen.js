@@ -28,6 +28,7 @@ export default class HomeScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
             <Text style={styles.getStartedText}>You address: {this.props.stores.wallet.address}</Text>
+            <Text style={styles.getStartedText}>{JSON.stringify(this.props.stores.wallet.walletInfo)}</Text>
             <Text style={styles.getStartedText}>Has Wif: {this.props.stores.wallet.hasWif ? 'true' : 'false'}</Text>
             <Text style={styles.getStartedText}>Has
               Mnemonic: {this.props.stores.wallet.hasMnemonic ? 'true' : 'false'}</Text>

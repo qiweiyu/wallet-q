@@ -17,7 +17,7 @@ export class AddressTitle extends React.Component {
     return (
       <View style={styles.titleContainer}>
         <AddressAvatar address={this.props.address}/>
-        <Text style={styles.titleAddress}>{utils.wallet.shortAddress(this.props.address)}</Text>
+        <Text style={styles.titleAddress}>{this.props.address}</Text>
       </View>
     );
   }
