@@ -95,10 +95,17 @@ const encryptAndSaveWif = async (wif, password, network) => {
   return true;
 };
 
-const destroyWallet =
-  async () => {
-    await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
-  };
+const destroyWallet = async () => {
+  await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
+};
+
+const satPos = 8;
+const changeUnitFromSatTo1 = (amountSat) => {
+  return amountSat * 10 ** (-1 * satPos);
+};
+const changeUnitFrom1ToSat = (amount) => {
+  return amount * 10 ** satPos;
+};
 
 export default {
   getDefaultNetwork,
@@ -111,4 +118,6 @@ export default {
   decryptLocalSavedWallet,
   encryptAndSaveMnemonic,
   encryptAndSaveWif,
+  changeUnitFromSatTo1,
+  changeUnitFrom1ToSat,
 };

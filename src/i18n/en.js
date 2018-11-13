@@ -7,6 +7,13 @@ export default {
       },
     },
   },
+  components: {
+    address: {
+      available: 'Available QTUM ',
+      locked: 'Locked QTUM',
+      address: 'QTUM Address',
+    },
+  },
   account: {
     new: {
       welcome1: 'Welcome to Wallet·Q',

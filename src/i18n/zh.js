@@ -7,6 +7,13 @@ export default {
       },
     },
   },
+  components: {
+    address: {
+      available: '可用余额',
+      locked: '锁定额度',
+      address: '地址',
+    },
+  },
   account: {
     new: {
       welcome1: '欢迎使用Wallet·Q',
