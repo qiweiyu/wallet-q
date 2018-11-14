@@ -15,7 +15,7 @@ import { GesturePassword } from 'src/components/GesturePassword';
 import logo from 'assets/images/icon.png';
 
 import i18n from 'src/i18n';
-import utils from 'src/utils';
+import wallet from 'src/utils/wallet';
 
 @inject('stores') @observer
 export default class RecoverScreen extends React.Component {
@@ -56,7 +56,7 @@ export default class RecoverScreen extends React.Component {
 
   @action
   _checkPassword = (password) => {
-    utils.wallet.decryptLocalSavedWallet(password).then(res => {
+    wallet.decryptLocalSavedWallet(password).then(res => {
       if (!res) {
         this.store.isError = false;
         this.store.isError = true;
@@ -82,7 +82,7 @@ export default class RecoverScreen extends React.Component {
         },
         },
         { text: 'OK', onPress: () => {
-          utils.wallet.destroyWallet().then(() => {
+          wallet.destroyWallet().then(() => {
             this.props.navigation.navigate('NewAccount');
           });
         } },

@@ -1,4 +1,5 @@
 export default {
+  name: 'zh',
   common: {
     network: {
       failed: '网络连接失败',
@@ -55,6 +56,7 @@ export default {
   wallet: {
     home: {
       title: '钱包',
+      balance: '余额',
     },
   },
 };

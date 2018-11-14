@@ -15,7 +15,7 @@ import Colors from 'src/constants/Colors';
 import { Screen, BigButton } from 'src/components';
 
 import i18n from 'src/i18n';
-import utils from 'src/utils';
+import wallet from 'src/utils/wallet';
 
 @observer
 export default class ImportByMnemonicScreen extends React.Component {
@@ -26,7 +26,7 @@ export default class ImportByMnemonicScreen extends React.Component {
   @observable
   store = {
     input: '',
-    path: utils.wallet.getDefaultDerivePath(),
+    path: wallet.getDefaultDerivePath(),
   };
 
   render() {
@@ -73,7 +73,7 @@ export default class ImportByMnemonicScreen extends React.Component {
           },
         ],
         { cancelable: false });
-    } else if (!utils.wallet.validateMnemonic(this.store.input)) {
+    } else if (!wallet.validateMnemonic(this.store.input)) {
       Alert.alert(
         i18n.t('account.import.mnemonicError'),
         i18n.t('account.import.mnemonicErrorDesc'),

@@ -15,7 +15,7 @@ import Colors from 'src/constants/Colors';
 import { Screen, BigButton } from 'src/components';
 
 import i18n from 'src/i18n';
-import utils from 'src/utils';
+import wallet from 'src/utils/wallet';
 
 @observer
 export default class ImportByWifScreen extends React.Component {
@@ -63,7 +63,7 @@ export default class ImportByWifScreen extends React.Component {
           },
         ],
         { cancelable: false });
-    } else if (!utils.wallet.validateWif(this.store.input)) {
+    } else if (!wallet.validateWif(this.store.input)) {
       Alert.alert(
         i18n.t('account.import.wifError'),
         i18n.t('account.import.wifErrorDesc'),

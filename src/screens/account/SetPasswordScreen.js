@@ -11,7 +11,7 @@ import { Screen, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
 
 import i18n from 'src/i18n';
-import utils from 'src/utils';
+import wallet from 'src/utils/wallet';
 
 @inject('stores') @observer
 export default class SetPasswordScreen extends React.Component {
@@ -97,7 +97,7 @@ export default class SetPasswordScreen extends React.Component {
     if (type === 'wif') {
       const wif = this.props.navigation.getParam('wif', '');
       // todo try catch
-      await utils.wallet.encryptAndSaveWif(wif, password);
+      await wallet.encryptAndSaveWif(wif, password);
       return {
         hasWif: true,
       };
@@ -108,10 +108,10 @@ export default class SetPasswordScreen extends React.Component {
         mnemonic = this.props.navigation.getParam('mnemonic', '');
         path = this.props.navigation.getParam(path, '');
       } else {
-        mnemonic = utils.wallet.generateMnemonic();
-        path = utils.wallet.getDefaultDerivePath();
+        mnemonic = wallet.generateMnemonic();
+        path = wallet.getDefaultDerivePath();
       }
-      await utils.wallet.encryptAndSaveMnemonic(mnemonic, password, path);
+      await wallet.encryptAndSaveMnemonic(mnemonic, password, path);
       return {
         hasWif: true,
         hasMnemonic: true,

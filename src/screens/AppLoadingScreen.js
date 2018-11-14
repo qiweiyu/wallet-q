@@ -4,7 +4,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Layout from 'src/constants/Layout';
-import utils from 'src/utils';
+import wallet from 'src/utils/wallet';
 import { Screen } from 'src/components';
 import { inject, observer } from 'mobx-react';
 
@@ -38,7 +38,7 @@ export default class AppLoadingScreen extends React.Component {
   }
 
   _loading = async () => {
-    await utils.wallet.checkLocalSavedWallet();
+    await wallet.checkLocalSavedWallet();
   };
 }
 

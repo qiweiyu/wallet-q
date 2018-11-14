@@ -52,7 +52,7 @@ const decryptLocalSavedWallet = async (password) => {
   const address = await stores.wallet.getAddress();
   const savedData = await secureStore.fetch(address);
   if (!savedData) {
-    await Wallet.destroyWallet();
+    await destroyWallet();
     return false;
   }
   const decryptedBody = aes256.decrypt(password, savedData);
@@ -99,12 +99,23 @@ const destroyWallet = async () => {
   await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
 };
 
+const addAmountDelimiters = (numString) => {
+  return numString.replace(/^(\d{1,3})((\d{3})*)(\.\d+|)$/g, (_, before, middle, __, after) => {
+    return before + middle.replace(/(\d{3})/g, ',$1') + after;
+  });
+};
+
 const satPos = 8;
 const changeUnitFromSatTo1 = (amountSat) => {
-  return amountSat * 10 ** (-1 * satPos);
+  const sign = amountSat >= 0;
+  if (!sign) {
+    amountSat = amountSat * -1;
+  }
+  const amountSatString = amountSat.toString().padStart(satPos + 1, '0');
+  return (sign ? '' : '-') + addAmountDelimiters((amountSatString.slice(0, -1 * satPos) + '.' + amountSatString.slice(-1 * satPos)).replace(/\.?0*$/g, ''));
 };
 const changeUnitFrom1ToSat = (amount) => {
-  return amount * 10 ** satPos;
+  return amount * ( 10 ** satPos );
 };
 
 export default {
@@ -116,6 +127,7 @@ export default {
   validateWif,
   checkLocalSavedWallet,
   decryptLocalSavedWallet,
+  destroyWallet,
   encryptAndSaveMnemonic,
   encryptAndSaveWif,
   changeUnitFromSatTo1,

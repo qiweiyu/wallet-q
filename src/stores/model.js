@@ -1,9 +1,22 @@
 import log from 'src/utils/log';
 
 export default class Model {
-  get = (url) => {
+  get = (url, params = {}) => {
     return new Promise((resolve, reject) => {
-      let response = fetch(url);
+      let query = [];
+      Object.keys(params).forEach(key => {
+        query.push(`${key}=${params[key]}`);
+      });
+      query = query.join('&');
+      let join = '';
+      if (query) {
+        if (url.includes('?')) {
+          join = '&';
+        } else {
+          join = '?';
+        }
+      }
+      let response = fetch(`${url}${join}${query}`);
       response.then(res => {
         if (res.status !== 200) {
           log.warning('Api failed: ', {

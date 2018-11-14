@@ -1,4 +1,5 @@
 export default {
+  name: 'en',
   common: {
     network: {
       failed: 'Network Connecting Error',
@@ -55,6 +56,7 @@ export default {
   wallet: {
     home: {
       title: 'Wallet',
+      balance: 'Balace',
     },
   },
 };

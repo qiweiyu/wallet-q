@@ -19,6 +19,9 @@ export default class Wallet extends Model {
   @observable totalTxCount = null;
   @observable qrc20List = [];
   @observable balanceHistory = [];
+  @observable balanceHistoryCount = 0;
+  @observable balanceHistoryPage = 0;
+  pageSize = 20;
 
   apiHost = config.api.host;
 
@@ -58,6 +61,18 @@ export default class Wallet extends Model {
       this.address = '';
       this.hasWif = false;
       this.hasMnemonic = false;
+      this.balanceSat = null;
+      this.stakingSat = null;
+      this.matureSat = null;
+      this.totalReceivedSat = null;
+      this.totalSentSat = null;
+      this.ranking = null;
+      this.blocksStaked = null;
+      this.totalTxCount = null;
+      this.qrc20List = [];
+      this.balanceHistory = [];
+      this.balanceHistoryCount = 0;
+      this.balanceHistoryPage = 0;
       return true;
     } catch (error) {
       log.warning('async storage remove address error', {
@@ -106,11 +121,17 @@ export default class Wallet extends Model {
 
   @action
   fetchHistory = async (address) => {
+    address = address ? address : this.address;
     try {
-      const res = await this.get(`${this.apiHost}/address/${address}/balance-history`);
+      const res = await this.get(`${this.apiHost}/address/${address}/balance-history`, {
+        page: this.balanceHistoryPage,
+        pageSize: this.pageSize,
+      });
       if (res) {
-        res.forEach(item => {
-          this.balanceHistory.push({
+        const appendList = [];
+        res.transactions.forEach(item => {
+          appendList.push({
+            key: item.id,
             id: item.id,
             height: item.blockHeight,
             timestamp: item.timestamp,
@@ -120,9 +141,14 @@ export default class Wallet extends Model {
             balance: wallet.changeUnitFromSatTo1(item.balance),
           });
         });
+        set(this, {
+          balanceHistory: this.balanceHistory.concat(appendList),
+          balanceHistoryCount: res.count,
+          balanceHistoryPage: this.balanceHistoryPage + 1,
+        });
       }
     } catch (error) {
-      log.warning('common.network.address.failed');
+      log.warning('Fetch Balance History Failed', error);
     }
   };
 }
