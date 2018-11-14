@@ -6,6 +6,20 @@ export default {
       address: {
         failed: '服务端账户地址解析失败',
       },
+      tx: {
+        notFound: '交易不存在',
+      },
+    },
+    tx: {
+      type: {
+        transaction: '交易',
+        receive: '转入',
+        send: '转出',
+        gasRefund: 'GAS退款',
+        gas: 'GAS消费',
+        staking: '挖矿',
+        coinbase: '区块头',
+      },
     },
   },
   components: {

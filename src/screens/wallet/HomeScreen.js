@@ -43,15 +43,24 @@ export default class HomeScreen extends React.Component {
   _renderHistory = (item) => {
     return (
       <View style={styles.txContainer}>
-        <Text>{moment(item.timestamp * 1000).smartFormat()}</Text>
+        <View style={styles.txInfoContainer}>
+          <View style={styles.txAmountTag}>
+            <Text style={styles.txAmountTagText}>{i18n.t(`common.tx.type.${item.type}`)}</Text>
+          </View>
+          <Text> {moment(item.timestamp * 1000).smartFormat()}</Text>
+        </View>
         {item.amountSat > 0 ? (
-          <Text style={[styles.txAmountText, styles.txAmountPlus]}>+ {item.amount}
-            <Text style={styles.txAmountUnit}> QTUM</Text>
-          </Text>
+          <View style={styles.txAmountContainer}>
+            <Text style={[styles.txAmountText, styles.txAmountPlus]}>+ {item.amount}
+              <Text style={styles.txAmountUnit}> QTUM</Text>
+            </Text>
+          </View>
         ) : (
-          <Text style={[styles.txAmountText, styles.txAmountMinus]}>{item.amount.replace('-', '- ')}
-            <Text style={styles.txAmountUnit}> QTUM</Text>
-          </Text>
+          <View style={styles.txAmountContainer}>
+            <Text style={[styles.txAmountText, styles.txAmountMinus]}>{item.amount.replace('-', '- ')}
+              <Text style={styles.txAmountUnit}> QTUM</Text>
+            </Text>
+          </View>
         )}
         <View style={styles.txBalanceContainer}>
           <Text>{i18n.t('wallet.home.balance')}</Text>
@@ -76,8 +85,22 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
   },
+  txInfoContainer: {
+    flexDirection: 'row',
+  },
+  txAmountContainer: {
+    flexDirection: 'row',
+  },
+  txAmountTag: {
+    backgroundColor: Colors.primary,
+    height: 18,
+    borderRadius: 5,
+  },
+  txAmountTagText: {
+    color: Colors.textInPrimary,
+  },
   txAmountText: {
-    textAlign: 'right',
+    marginLeft: 'auto',
     fontSize: 26,
   },
   txAmountUnit: {
@@ -94,5 +117,5 @@ const styles = StyleSheet.create({
   },
   txBalanceText: {
     marginLeft: 'auto',
-  }
+  },
 });

@@ -6,6 +6,20 @@ export default {
       address: {
         failed: 'Sever Wallet Address Decode Failed',
       },
+      tx: {
+        notFound: 'Transaction not found',
+      },
+    },
+    tx: {
+      type: {
+        transaction: 'Transaction',
+        receive: 'Receive',
+        send: 'Send',
+        gasRefund: 'GAS Refund',
+        gas: 'GAS',
+        staking: 'Staking',
+        coinbase: 'Coinbase',
+      },
     },
   },
   components: {

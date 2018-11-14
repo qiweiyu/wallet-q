@@ -21,6 +21,7 @@ export default class Wallet extends Model {
   @observable balanceHistory = [];
   @observable balanceHistoryCount = 0;
   @observable balanceHistoryPage = 0;
+  @observable txMap = new Map();
   pageSize = 20;
 
   apiHost = config.api.host;
@@ -100,7 +101,7 @@ export default class Wallet extends Model {
         });
       }
     } catch (error) {
-      log.warningWithToast('common.network.address.failed');
+      log.warningWithToast('common.network.address.failed', 'Fetch Address Failed', error);
     }
   };
 
@@ -129,7 +130,8 @@ export default class Wallet extends Model {
       });
       if (res) {
         const appendList = [];
-        res.transactions.forEach(item => {
+        const idMap = {};
+        res.transactions.forEach((item) => {
           appendList.push({
             key: item.id,
             id: item.id,
@@ -139,7 +141,16 @@ export default class Wallet extends Model {
             balanceSat: item.balance,
             amount: wallet.changeUnitFromSatTo1(item.amount),
             balance: wallet.changeUnitFromSatTo1(item.balance),
+            tx: null,
+            type: null,
           });
+          idMap[item.id] = true;
+        });
+        await this.fetchTxs(Object.keys(idMap));
+        appendList.forEach((item, index) => {
+          item.tx = this.txMap.get(item.id);
+          item.type = wallet.calTxType(item.tx, address);
+          appendList[index] = item;
         });
         set(this, {
           balanceHistory: this.balanceHistory.concat(appendList),
@@ -148,7 +159,23 @@ export default class Wallet extends Model {
         });
       }
     } catch (error) {
-      log.warning('Fetch Balance History Failed', error);
+      log.warningWithToast('common.network.address.failed', 'Fetch Balance History Failed', error);
+    }
+  };
+
+  @action
+  fetchTxs = async (txIdList = []) => {
+    try {
+      const res = await this.get(`${this.apiHost}/txs/${txIdList.join(',')}`);
+      if (res) {
+        const txMap = this.txMap;
+        res.forEach(item => {
+          txMap.set(item.id, item);
+        });
+        this.txMap = txMap;
+      }
+    } catch (error) {
+      log.warningWithToast('common.network.tx.notFound', 'Fetch Tx Failed', error);
     }
   };
 }

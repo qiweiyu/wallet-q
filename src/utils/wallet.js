@@ -2,8 +2,10 @@ import bip39 from 'bip39';
 import bip32 from 'bip32';
 import qtum from 'qtumjs-lib';
 import bitcoin from 'bitcoinjs-lib';
+import BigNumber from 'bignumber.js';
 import { aes256 } from './encrypt';
 import secureStore from './secureStore';
+import log from './log';
 import stores from 'src/stores';
 
 const qtumNetwork = qtum.networks.qtum;
@@ -99,6 +101,78 @@ const destroyWallet = async () => {
   await Promise.all([secureStore.reset(), stores.wallet.delAddress()]);
 };
 
+const calTxType = (tx, address = '') => {
+  let type = '';
+  if (tx.isCoinbase) {
+    type = 'coinbase';
+  } else if (tx.isCoinstake) {
+    type = 'staking';
+    if (address) {
+      try {
+        let reward = null;
+        let stakingAddress = null;
+        let maySplitStaking = false;
+        tx.outputs.forEach((output) => {
+          if (output.index === 1) {
+            stakingAddress = output.address;
+          } else if (output.index === 2) {
+            maySplitStaking = (stakingAddress === output.address);
+          } else if (output.index === 3) {
+            reward = new BigNumber(output.value);
+          }
+          if (address === output.address) {
+            if (output.index > 11) {
+              type = 'gasRefund';
+            } else if (output.index === 11) {
+              if (maySplitStaking) {
+                const value = new BigNumber(output.value);
+                if (value.minus(reward).abs() > 10) {
+                  // todo check the contract tx is better
+                  type = 'gasRefund';
+                }
+              } else {
+                type = 'gasRefund';
+              }
+            }
+          }
+        });
+      } catch (error) {
+        log.warning('Try to define address type failed', error);
+      }
+    }
+  } else {
+    type = 'transaction';
+    if (address) {
+      let inputValue = new BigNumber(0);
+      let outputValue = new BigNumber(0);
+      let isCall = false;
+      tx.inputs.forEach((input) => {
+        if (input.address === address) {
+          inputValue = inputValue.plus(input.value);
+        }
+      });
+      tx.outputs.forEach((output) => {
+        if (output.scriptPubKey.type === 'call') {
+          isCall = true;
+        }
+        if (output.address === address) {
+          outputValue = outputValue.plus(output.value);
+        }
+      });
+      if (isCall) {
+        type = 'gas';
+      } else {
+        if (inputValue.gt(outputValue)) {
+          type = 'send';
+        } else {
+          type = 'receive';
+        }
+      }
+    }
+  }
+  return type;
+};
+
 const addAmountDelimiters = (numString) => {
   return numString.replace(/^(\d{1,3})((\d{3})*)(\.\d+|)$/g, (_, before, middle, __, after) => {
     return before + middle.replace(/(\d{3})/g, ',$1') + after;
@@ -130,6 +204,7 @@ export default {
   destroyWallet,
   encryptAndSaveMnemonic,
   encryptAndSaveWif,
+  calTxType,
   changeUnitFromSatTo1,
   changeUnitFrom1ToSat,
 };
