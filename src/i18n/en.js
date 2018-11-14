@@ -70,7 +70,8 @@ export default {
   wallet: {
     home: {
       title: 'Wallet',
-      balance: 'Balace',
+      balance: 'Balance',
+      emptyTx: 'No Transactions Now',
     },
   },
 };

@@ -35,6 +35,9 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           data={this.props.stores.wallet.balanceHistory}
           renderItem={({ item }) => this._renderHistory(item)}
+          ListEmptyComponent={this._renderEmpty}
+          onEndReached={this._onEndReached}
+          onEndReachedThreshold={0.3}
         />
       </AuthScreen>
     );
@@ -69,53 +72,71 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   };
+
+  _renderEmpty = () => {
+    return (
+      <View>
+        <Text style={styles.emptyTxInfo}>--- {i18n.t('wallet.home.emptyTx')} ---</Text>
+      </View>
+    );
+  };
+
+  _onEndReached = () => {
+    this.props.stores.wallet.fetchHistory();
+  };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#dedede',
+const styles = StyleSheet.create(
+  {
+    container: {
+      backgroundColor: '#dedede',
+    },
+    txContainer: {
+      backgroundColor: Colors.background,
+      margin: 5,
+      marginTop: 3,
+      marginBottom: 3,
+      padding: 5,
+      shadowColor: '#999',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.5,
+    },
+    txInfoContainer: {
+      flexDirection: 'row',
+    },
+    txAmountContainer: {
+      flexDirection: 'row',
+    },
+    txAmountTag: {
+      backgroundColor: Colors.primary,
+      height: 18,
+      borderRadius: 5,
+    },
+    txAmountTagText: {
+      color: Colors.textInPrimary,
+    },
+    txAmountText: {
+      marginLeft: 'auto',
+      fontSize: 26,
+    },
+    txAmountUnit: {
+      fontSize: 20,
+    },
+    txAmountPlus: {
+      color: '#63b97f',
+    },
+    txAmountMinus: {
+      color: '#d52a29',
+    },
+    txBalanceContainer: {
+      flexDirection: 'row',
+    },
+    txBalanceText: {
+      marginLeft: 'auto',
+    },
+    emptyTxInfo: {
+      marginTop: 20,
+      textAlign: 'center',
+    },
   },
-  txContainer: {
-    backgroundColor: Colors.background,
-    margin: 5,
-    marginTop: 3,
-    marginBottom: 3,
-    padding: 5,
-    shadowColor: '#999',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.5,
-  },
-  txInfoContainer: {
-    flexDirection: 'row',
-  },
-  txAmountContainer: {
-    flexDirection: 'row',
-  },
-  txAmountTag: {
-    backgroundColor: Colors.primary,
-    height: 18,
-    borderRadius: 5,
-  },
-  txAmountTagText: {
-    color: Colors.textInPrimary,
-  },
-  txAmountText: {
-    marginLeft: 'auto',
-    fontSize: 26,
-  },
-  txAmountUnit: {
-    fontSize: 20,
-  },
-  txAmountPlus: {
-    color: '#63b97f',
-  },
-  txAmountMinus: {
-    color: '#d52a29',
-  },
-  txBalanceContainer: {
-    flexDirection: 'row',
-  },
-  txBalanceText: {
-    marginLeft: 'auto',
-  },
-});
+);

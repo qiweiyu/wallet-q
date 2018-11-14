@@ -71,6 +71,7 @@ export default {
     home: {
       title: '钱包',
       balance: '余额',
+      emptyTx: '当前没有交易记录',
     },
   },
 };
