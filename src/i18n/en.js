@@ -28,6 +28,9 @@ export default {
       locked: 'Locked QTUM',
       address: 'QTUM Address',
     },
+    loadingMore: {
+      noMore: 'No more data',
+    },
   },
   account: {
     new: {

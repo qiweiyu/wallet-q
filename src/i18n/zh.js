@@ -28,6 +28,9 @@ export default {
       locked: '锁定额度',
       address: '地址',
     },
+    loadingMore: {
+      noMore: '没有更多数据了',
+    },
   },
   account: {
     new: {

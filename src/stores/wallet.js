@@ -19,6 +19,7 @@ export default class Wallet extends Model {
   @observable totalTxCount = 0;
   @observable qrc20List = [];
   @observable balanceHistory = [];
+  @observable balanceHistoryMap = new Map();
   @observable balanceHistoryCount = 0;
   @observable balanceHistoryPage = 0;
   @observable txMap = new Map();
@@ -121,31 +122,42 @@ export default class Wallet extends Model {
     return wallet.changeUnitFromSatTo1(this.stakingSat);
   }
 
+  /**
+   * @param address
+   * @param isRefresh
+   * @returns {Promise.<boolean>} return reach the bottom or not
+   */
   @action
-  fetchHistory = async (address) => {
+  fetchHistory = async (address, isRefresh = false) => {
     address = address ? address : this.address;
+    const currentPage = isRefresh ? 0 : this.balanceHistoryPage;
+    const balanceHistory = isRefresh ? [] : this.balanceHistory;
+    const balanceHistoryMap = isRefresh ? new Map() : this.balanceHistoryMap;
     try {
       const res = await this.get(`${this.apiHost}/address/${address}/balance-history`, {
-        page: this.balanceHistoryPage,
+        page: currentPage,
         pageSize: this.pageSize,
       });
       if (res) {
         const appendList = [];
         const idMap = {};
         res.transactions.forEach((item) => {
-          appendList.push({
-            key: item.id,
-            id: item.id,
-            height: item.blockHeight,
-            timestamp: item.timestamp,
-            amountSat: item.amount,
-            balanceSat: item.balance,
-            amount: wallet.changeUnitFromSatTo1(item.amount),
-            balance: wallet.changeUnitFromSatTo1(item.balance),
-            tx: null,
-            type: null,
-          });
-          idMap[item.id] = true;
+          if (!balanceHistoryMap[item.id]) {
+            appendList.push({
+              key: item.id,
+              id: item.id,
+              height: item.blockHeight,
+              timestamp: item.timestamp,
+              amountSat: item.amount,
+              balanceSat: item.balance,
+              amount: wallet.changeUnitFromSatTo1(item.amount),
+              balance: wallet.changeUnitFromSatTo1(item.balance),
+              tx: null,
+              type: null,
+            });
+            balanceHistoryMap[item.id] = true;
+            idMap[item.id] = true;
+          }
         });
         await this.fetchTxs(Object.keys(idMap));
         appendList.forEach((item, index) => {
@@ -154,13 +166,17 @@ export default class Wallet extends Model {
           appendList[index] = item;
         });
         set(this, {
-          balanceHistory: this.balanceHistory.concat(appendList),
+          balanceHistory: balanceHistory.concat(appendList),
           balanceHistoryCount: res.count,
-          balanceHistoryPage: this.balanceHistoryPage + 1,
+          balanceHistoryPage: currentPage + 1,
+          balanceHistoryMap,
         });
+        return appendList.length <= 0;
       }
+      return false;
     } catch (error) {
       log.warningWithToast('common.network.address.failed', 'Fetch Balance History Failed', error);
+      return false;
     }
   };
 

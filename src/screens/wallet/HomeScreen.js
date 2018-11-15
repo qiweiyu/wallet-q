@@ -1,17 +1,16 @@
 import React from 'react';
 import {
-  Image,
-  Platform,
   FlatList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
+import { observable, action, set } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import Colors from 'src/constants/Colors';
 import { AuthScreen } from 'src/components';
 import { AddressInfo } from 'src/components/Address';
+import { LoadingMore } from 'src/components/LoadingMore';
 import i18n from 'src/i18n';
 import moment from 'src/utils/moment';
 
@@ -23,9 +22,18 @@ export default class HomeScreen extends React.Component {
     };
   };
 
+  @observable
+  store = {
+    onRefresh: true,
+    onLoadingEnd: false,
+    reachTxBottom: false,
+  };
+
   componentDidMount() {
-    this.props.stores.wallet.fetchWalletInfo();
-    this.props.stores.wallet.fetchHistory();
+    this.store.onRefresh = true;
+    this.props.stores.wallet.fetchWalletInfo().then(() => {
+      this._onRefresh();
+    });
   }
 
   render() {
@@ -39,6 +47,9 @@ export default class HomeScreen extends React.Component {
           ListEmptyComponent={this._renderEmpty}
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0.3}
+          refreshing={this.store.onRefresh}
+          onRefresh={this._onRefresh}
+          ListFooterComponent={<LoadingMore noMore={this.store.reachTxBottom && this.props.stores.wallet.balanceHistory.length} onLoading={this.store.onLoadingEnd}/>}
         />
       </AuthScreen>
     );
@@ -75,15 +86,40 @@ export default class HomeScreen extends React.Component {
   };
 
   _renderEmpty = () => {
-    return (
+    return this.store.onRefresh || (
       <View>
         <Text style={styles.emptyTxInfo}>--- {i18n.t('wallet.home.emptyTx')} ---</Text>
       </View>
     );
   };
 
+  @action
   _onEndReached = () => {
-    this.props.stores.wallet.fetchHistory();
+    if (!(this.store.reachTxBottom || this.store.onLoadingEnd || this.store.onRefresh)) {
+      this.store.onLoadingEnd = true;
+      this.props.stores.wallet.fetchHistory().then((reachBottom) => {
+        set(this.store, {
+          onLoadingEnd: false,
+          reachTxBottom: reachBottom,
+        });
+      });
+    }
+  };
+
+
+  @action
+  _onRefresh = () => {
+    set(this.store, {
+      onRefresh: true,
+      reachTxBottom: false,
+      onLoadingEnd: false,
+    });
+    this.props.stores.wallet.fetchHistory(this.props.stores.wallet.address, true).then((reachBottom) => {
+      set(this.store, {
+        onRefresh: false,
+        reachTxBottom: reachBottom,
+      });
+    });
   };
 }
 
