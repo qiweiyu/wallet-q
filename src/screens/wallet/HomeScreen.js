@@ -59,7 +59,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.txContainer}>
         <View style={styles.txInfoContainer}>
-          <View style={styles.txAmountTag}>
+          <View style={[styles.txAmountTag, styles[`typeTag${item.type}`]]}>
             <Text style={styles.txAmountTagText}>{i18n.t(`common.tx.type.${item.type}`)}</Text>
           </View>
           <Text> {moment(item.timestamp * 1000).smartFormat()}</Text>
@@ -146,7 +146,6 @@ const styles = StyleSheet.create(
     },
     txAmountTag: {
       backgroundColor: Colors.primary,
-      height: 18,
       borderRadius: 5,
     },
     txAmountTagText: {
@@ -174,6 +173,15 @@ const styles = StyleSheet.create(
     emptyTxInfo: {
       marginTop: 20,
       textAlign: 'center',
+    },
+    typeTagstaking: {
+      backgroundColor: '#ffc73c',
+    },
+    typeTagreceive: {
+      backgroundColor: '#63b97f',
+    },
+    typeTagsend: {
+      backgroundColor: '#d52a29',
     },
   },
 );

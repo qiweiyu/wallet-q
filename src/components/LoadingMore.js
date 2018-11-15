@@ -26,6 +26,7 @@ const styles = StyleSheet.create(
     loadingMoreContainer: {
       backgroundColor: '#dedede',
       paddingTop: 20,
+      paddingBottom: 20,
     },
     onMoreText: {
       textAlign: 'center',
