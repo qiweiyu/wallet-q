@@ -6,7 +6,6 @@ import {
   View,
   Text,
   TextInput,
-  Keyboard,
 } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

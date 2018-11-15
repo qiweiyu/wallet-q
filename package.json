@@ -41,6 +41,7 @@
     "react-native-keychain": "^3.0.0",
     "react-native-level-fs": "^3.0.1",
     "react-native-os": "^1.2.1",
+    "react-native-qrcode": "^0.2.7",
     "react-native-randombytes": "^3.5.1",
     "react-native-simple-toast": "0.0.8",
     "react-native-smart-gesture-password-angeloslex": "^2.1.5",

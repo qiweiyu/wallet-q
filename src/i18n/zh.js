@@ -30,6 +30,7 @@ export default {
     },
     loadingMore: {
       noMore: '没有更多数据了',
+      empty: '当前没有数据',
     },
   },
   account: {
@@ -79,7 +80,13 @@ export default {
     home: {
       title: '钱包',
       balance: '余额',
-      emptyTx: '当前没有交易记录',
+    },
+    receive: {
+      title: '收款码',
+      amount: '金额',
+    },
+    send: {
+      title: '转账',
     },
   },
 };

@@ -8,7 +8,6 @@ export default {
   text: '#999',
   textInPrimary: '#fff',
   error: 'red',
-  // todo
   tintColor,
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,

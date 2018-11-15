@@ -17,15 +17,14 @@ import i18n from 'src/i18n';
 import wallet from 'src/utils/wallet';
 
 @observer
-export default class ImportByMnemonicScreen extends React.Component {
+export default class SendScreen extends React.Component {
   static navigationOptions = {
-    title: i18n.t('account.new.importByMnemonic'),
+    title: i18n.t('wallet.send.title'),
   };
 
   @observable
   store = {
     input: '',
-    path: wallet.getDefaultDerivePath(),
   };
 
   render() {
@@ -33,7 +32,7 @@ export default class ImportByMnemonicScreen extends React.Component {
       <Screen>
         <View style={styles.contentContainer}>
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>{i18n.t('account.import.mnemonicLabel')}</Text>
+            <Text style={styles.inputLabel}>{i18n.t('account.import.wifLabel')}</Text>
             <TextInput
               style={styles.input}
               underlineColorAndroid={'transparent'}
@@ -41,13 +40,6 @@ export default class ImportByMnemonicScreen extends React.Component {
               multiline={true}
               value={this.store.input}
               onChangeText={(text) => this.store.input = text}/>
-            <Text style={styles.inputLabel}>{i18n.t('account.import.pathLabel')}</Text>
-            <TextInput
-              style={styles.path}
-              editable={true}
-              multiline={false}
-              value={this.store.path}
-              onChangeText={(text) => this.store.path = text}/>
           </View>
         </View>
         <ScrollView/>
@@ -59,29 +51,26 @@ export default class ImportByMnemonicScreen extends React.Component {
   }
 
   _confirm = () => {
+    this.store.input = this.store.input.trim();
     if (this.store.input === '') {
       Alert.alert(
-        i18n.t('account.import.mnemonicEmpty'),
-        i18n.t('account.import.mnemonicErrorDesc'),
+        i18n.t('account.import.wifEmpty'),
+        i18n.t('account.import.wifErrorDesc'),
         [
           {
-            text: 'Cancel', onPress: () => {},
+            text: 'OK', onPress: () => {
           },
-          {
-            text: 'OK', onPress: () => {this._goToSetPassword();},
           },
         ],
         { cancelable: false });
-    } else if (!wallet.validateMnemonic(this.store.input)) {
+    } else if (!wallet.validateWif(this.store.input)) {
       Alert.alert(
-        i18n.t('account.import.mnemonicError'),
-        i18n.t('account.import.mnemonicErrorDesc'),
+        i18n.t('account.import.wifError'),
+        i18n.t('account.import.wifErrorDesc'),
         [
           {
-            text: 'Cancel', onPress: () => {},
+            text: 'OK', onPress: () => {
           },
-          {
-            text: 'OK', onPress: () => {this._goToSetPassword();},
           },
         ],
         { cancelable: false });
@@ -92,16 +81,15 @@ export default class ImportByMnemonicScreen extends React.Component {
 
   _goToSetPassword = () => {
     this.props.navigation.navigate('SetPassword', {
-      from: 'mnemonic',
-      mnemonic: this.store.input,
-      path: this.store.path,
+      from: 'wif',
+      wif: this.store.input,
     });
   };
 }
 
 const styles = StyleSheet.create({
   contentContainer: {
-    paddingTop:  20
+    paddingTop: 20,
   },
   inputContainer: {
     marginLeft: 40,

@@ -30,6 +30,7 @@ export default {
     },
     loadingMore: {
       noMore: 'No more data',
+      empty: 'No data now'
     },
   },
   account: {
@@ -76,7 +77,13 @@ export default {
     home: {
       title: 'Wallet',
       balance: 'Balance',
-      emptyTx: 'No Transactions Now',
+    },
+    receive: {
+      title: 'Receive Code',
+      amount: 'Amount',
+    },
+    send: {
+      title: 'Transfer',
     },
   },
 };

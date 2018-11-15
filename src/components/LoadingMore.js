@@ -6,14 +6,19 @@ export class LoadingMore extends React.Component {
   render() {
     if (this.props.noMore) {
       return (
-        <View style={styles.loadingMoreContainer}>
-          <Text style={styles.onMoreText}>--- {i18n.t('components.loadingMore.noMore')} ---</Text>
+        <View style={styles.container}>
+          <Text style={styles.text}>--- {i18n.t('components.loadingMore.noMore')} ---</Text>
         </View>
       );
     } else if (this.props.onLoading) {
       return (
-        <View style={styles.loadingMoreContainer}>
+        <View style={styles.container}>
           <ActivityIndicator size={'large'}/>
+        </View>);
+    } else if (this.props.showEmpty) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.text}>--- {i18n.t('components.loadingMore.empty')} ---</Text>
         </View>);
     } else {
       return null;
@@ -23,12 +28,12 @@ export class LoadingMore extends React.Component {
 
 const styles = StyleSheet.create(
   {
-    loadingMoreContainer: {
+    container: {
       backgroundColor: '#dedede',
       paddingTop: 20,
       paddingBottom: 20,
     },
-    onMoreText: {
+    text: {
       textAlign: 'center',
     },
   },

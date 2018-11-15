@@ -1,9 +1,11 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
+import i18n from 'src/i18n';
+
 import HomeScreen from 'src/screens/wallet/HomeScreen';
-import LinksScreen from 'src/screens/LinksScreen';
+import ReceiveScreen from 'src/screens/wallet/ReceiveScreen';
+import SendScreen from 'src/screens/wallet/SendScreen';
 import SettingsScreen from 'src/screens/SettingsScreen';
 
 import TabBarIcon from 'src/components/TabBarIcon';
@@ -13,25 +15,41 @@ const HomeStack = createStackNavigator({
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: i18n.t('wallet.home.title'),
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-wallet`
-          : 'md-wallet'
-      }
+      name={'wallet'}
     />
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const ReceiveStack = createStackNavigator({
+  ReceiveScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+ReceiveStack.navigationOptions = {
+  tabBarLabel: i18n.t('wallet.receive.title'),
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={'qrcode'}
+    />
+  ),
+};
+
+const SendStack = createStackNavigator({
+  SendScreen,
+});
+
+SendStack.navigationOptions = {
+  tabBarLabel: i18n.t('wallet.send.title'),
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={'transfer'}
+    />
+  ),
 };
 
 const SettingsStack = createStackNavigator({
@@ -40,10 +58,17 @@ const SettingsStack = createStackNavigator({
 
 SettingsStack.navigationOptions = {
   tabBarLabel: 'Settings',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={'settings' + (focused ? '' : '-outline')}
+    />
+  ),
 };
 
 export default createBottomTabNavigator({
   HomeStack,
-  LinksStack,
+  ReceiveStack,
+  SendStack,
   SettingsStack,
 });

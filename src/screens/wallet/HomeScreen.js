@@ -44,12 +44,11 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           data={this.props.stores.wallet.balanceHistory}
           renderItem={({ item }) => this._renderHistory(item)}
-          ListEmptyComponent={this._renderEmpty}
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0.3}
           refreshing={this.store.onRefresh}
           onRefresh={this._onRefresh}
-          ListFooterComponent={<LoadingMore noMore={this.store.reachTxBottom && this.props.stores.wallet.balanceHistory.length} onLoading={this.store.onLoadingEnd}/>}
+          ListFooterComponent={<LoadingMore noMore={this.store.reachTxBottom && this.props.stores.wallet.balanceHistory.length} onLoading={this.store.onLoadingEnd} showEmpty={this.props.stores.wallet.balanceHistory.length === 0 && !this.store.onRefresh}/>}
         />
       </AuthScreen>
     );
@@ -81,14 +80,6 @@ export default class HomeScreen extends React.Component {
           <Text>{i18n.t('wallet.home.balance')}</Text>
           <Text style={styles.txBalanceText}>{item.balance} QTUM</Text>
         </View>
-      </View>
-    );
-  };
-
-  _renderEmpty = () => {
-    return this.store.onRefresh || (
-      <View>
-        <Text style={styles.emptyTxInfo}>--- {i18n.t('wallet.home.emptyTx')} ---</Text>
       </View>
     );
   };
@@ -169,10 +160,6 @@ const styles = StyleSheet.create(
     },
     txBalanceText: {
       marginLeft: 'auto',
-    },
-    emptyTxInfo: {
-      marginTop: 20,
-      textAlign: 'center',
     },
     typeTagstaking: {
       backgroundColor: '#ffc73c',

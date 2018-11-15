@@ -6,7 +6,6 @@ import {
   View,
   Text,
   TextInput,
-  Keyboard,
 } from 'react-native';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
@@ -36,7 +35,7 @@ export default class ImportByWifScreen extends React.Component {
             <Text style={styles.inputLabel}>{i18n.t('account.import.wifLabel')}</Text>
             <TextInput
               style={styles.input}
-              underlineColorAndroid={"transparent"}
+              underlineColorAndroid={'transparent'}
               editable={true}
               multiline={true}
               value={this.store.input}
@@ -59,7 +58,8 @@ export default class ImportByWifScreen extends React.Component {
         i18n.t('account.import.wifErrorDesc'),
         [
           {
-            text: 'OK', onPress: () => {},
+            text: 'OK', onPress: () => {
+          },
           },
         ],
         { cancelable: false });
@@ -69,7 +69,8 @@ export default class ImportByWifScreen extends React.Component {
         i18n.t('account.import.wifErrorDesc'),
         [
           {
-            text: 'OK', onPress: () => {},
+            text: 'OK', onPress: () => {
+          },
           },
         ],
         { cancelable: false });
