@@ -46,6 +46,7 @@
     "react-native-smart-gesture-password-angeloslex": "^2.1.5",
     "react-native-tcp": "^3.3.0",
     "react-native-udp": "^2.3.1",
+    "react-native-vector-icons": "^6.0.2",
     "react-navigation": "^2.18.2",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.0.0",

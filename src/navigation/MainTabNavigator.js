@@ -6,12 +6,17 @@ import HomeScreen from 'src/screens/wallet/HomeScreen';
 import LinksScreen from 'src/screens/LinksScreen';
 import SettingsScreen from 'src/screens/SettingsScreen';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const myIcon = (<Icon name="rocket" size={30} color="#900"/>);
+
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
 });
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
+  tabBarIcon: myIcon,
 };
 
 const LinksStack = createStackNavigator({
