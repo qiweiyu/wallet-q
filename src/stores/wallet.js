@@ -165,6 +165,9 @@ export default class Wallet extends Model {
 
   @action
   fetchTxs = async (txIdList = []) => {
+    if (!txIdList.length) {
+      return null;
+    }
     try {
       const res = await this.get(`${this.apiHost}/txs/${txIdList.join(',')}`);
       if (res) {
