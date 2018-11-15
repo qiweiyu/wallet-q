@@ -36,6 +36,7 @@ export default {
       create: '创建新钱包',
       importByMnemonic: '从助记词导入钱包',
       importByWif: '从私钥(WIF)导入钱包',
+      importByAddress: '从地址导入钱包',
     },
     recover: {
       drawGestureToUnlock: '绘制手势密码解锁钱包',
@@ -57,6 +58,7 @@ export default {
     import: {
       wifLabel: '请输入私钥(WIF)',
       mnemonicLabel: '请输入助记词(以空格分隔)',
+      addressLabel: '请输入地址',
       pathLabel: 'HD钱包路径',
       confirm: '确认导入钱包',
       mnemonicEmpty: '助记词为空',
@@ -65,6 +67,9 @@ export default {
       wifEmpty: '私钥为空',
       wifError: '私钥无法解码',
       wifErrorDesc: '请输入正确的私钥然后重试',
+      addressEmpty: '地址为空',
+      addressError: '地址无法解码',
+      addressErrorDesc: '请输入正确的地址然后重试',
     },
   },
   wallet: {

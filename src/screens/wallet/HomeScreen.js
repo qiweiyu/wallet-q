@@ -24,6 +24,7 @@ export default class HomeScreen extends React.Component {
   };
 
   componentDidMount() {
+    this.props.stores.wallet.fetchWalletInfo();
     this.props.stores.wallet.fetchHistory();
   }
 

@@ -3,6 +3,7 @@ import bip32 from 'bip32';
 import qtum from 'qtumjs-lib';
 import bitcoin from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
+import bs58check from 'bs58check';
 import { aes256 } from './encrypt';
 import secureStore from './secureStore';
 import log from './log';
@@ -39,6 +40,24 @@ const validateWif = (wif) => {
   }
 };
 
+const validateAddress = (address) => {
+  try {
+    const payload = bs58check.decode(address);
+    if (payload.length !== 21) {
+      return false;
+    }
+    const network = getDefaultNetwork();
+    const version = payload.readUInt8(0);
+
+    if (version !== network.pubKeyHash && version !== network.scriptHash) {
+      return false;
+    }
+    return true
+  } catch (error) {
+    return false;
+  }
+};
+
 const checkLocalSavedWallet = async () => {
   const address = await stores.wallet.getAddress();
   const hasSaved = await secureStore.fetch(address);
@@ -46,7 +65,6 @@ const checkLocalSavedWallet = async () => {
     await destroyWallet();
     return false;
   }
-  stores.wallet.fetchWalletInfo(address);
   return address;
 };
 
@@ -91,6 +109,16 @@ const encryptAndSaveWif = async (wif, password, network) => {
   const saveBody = aes256.encrypt(password, JSON.stringify({
     address,
     wif,
+    network,
+  }));
+  await Promise.all([secureStore.save(address, saveBody), stores.wallet.setAddress(address)]);
+  return true;
+};
+
+const encryptAndSaveAddress = async (address, password, network) => {
+  network = network || getDefaultNetwork();
+  const saveBody = aes256.encrypt(password, JSON.stringify({
+    address,
     network,
   }));
   await Promise.all([secureStore.save(address, saveBody), stores.wallet.setAddress(address)]);
@@ -199,11 +227,13 @@ export default {
   generateMnemonic,
   validateMnemonic,
   validateWif,
+  validateAddress,
   checkLocalSavedWallet,
   decryptLocalSavedWallet,
   destroyWallet,
   encryptAndSaveMnemonic,
   encryptAndSaveWif,
+  encryptAndSaveAddress,
   calTxType,
   changeUnitFromSatTo1,
   changeUnitFrom1ToSat,

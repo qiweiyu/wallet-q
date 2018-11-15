@@ -9,14 +9,14 @@ export default class Wallet extends Model {
   @observable address = '';
   @observable hasWif = false;
   @observable hasMnemonic = false;
-  @observable balanceSat = null;
-  @observable stakingSat = null;
-  @observable matureSat = null;
-  @observable totalReceivedSat = null;
-  @observable totalSentSat = null;
-  @observable ranking = null;
-  @observable blocksStaked = null;
-  @observable totalTxCount = null;
+  @observable balanceSat = '0';
+  @observable stakingSat = '0';
+  @observable matureSat = '0';
+  @observable totalReceivedSat = '0';
+  @observable totalSentSat = '0';
+  @observable ranking = 0;
+  @observable blocksStaked = 0;
+  @observable totalTxCount = 0;
   @observable qrc20List = [];
   @observable balanceHistory = [];
   @observable balanceHistoryCount = 0;
@@ -62,14 +62,14 @@ export default class Wallet extends Model {
       this.address = '';
       this.hasWif = false;
       this.hasMnemonic = false;
-      this.balanceSat = null;
-      this.stakingSat = null;
-      this.matureSat = null;
-      this.totalReceivedSat = null;
-      this.totalSentSat = null;
-      this.ranking = null;
-      this.blocksStaked = null;
-      this.totalTxCount = null;
+      this.balanceSat = '0';
+      this.stakingSat = '0';
+      this.matureSat = '0';
+      this.totalReceivedSat = '0';
+      this.totalSentSat = '0';
+      this.ranking = 0;
+      this.blocksStaked = 0;
+      this.totalTxCount = 0;
       this.qrc20List = [];
       this.balanceHistory = [];
       this.balanceHistoryCount = 0;
@@ -85,6 +85,7 @@ export default class Wallet extends Model {
 
   @action
   fetchWalletInfo = async (address) => {
+    address = address ? address : this.address;
     try {
       const res = await this.get(`${this.apiHost}/address/${address}`);
       if (res) {

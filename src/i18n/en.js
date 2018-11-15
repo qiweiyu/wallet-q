@@ -36,6 +36,7 @@ export default {
       create: 'Create A New Wallet',
       importByMnemonic: 'Import Wallet By Mnemonic',
       importByWif: 'Import Wallet By Private Key (WIF)',
+      importByAddress: 'Import Wallet By Address',
     },
     recover: {
       drawGestureToUnlock: 'Draw Gesture Password To Unlock Your Wallet',
@@ -57,6 +58,7 @@ export default {
     import: {
       wifLabel: 'Please input private key (WIF)',
       mnemonicLabel: 'Please input mnemonics(Split by space)',
+      addressLabel: 'Please input address',
       pathLabel: 'HD Wallet Path',
       confirm: 'Confirm import',
       mnemonicEmpty: 'Mnemonic is Empty',

@@ -40,6 +40,7 @@ export default class NewScreen extends React.Component {
           <BigButton onPress={this._goToCreateAccount}>{i18n.t('account.new.create')}</BigButton>
           <BigButton onPress={this._goToImportByMnemonic}>{i18n.t('account.new.importByMnemonic')}</BigButton>
           <BigButton onPress={this._goToImportByWif}>{i18n.t('account.new.importByWif')}</BigButton>
+          <BigButton onPress={this._goToImportByAddress}>{i18n.t('account.new.importByAddress')}</BigButton>
         </View>
       </Screen>
     );
@@ -55,6 +56,10 @@ export default class NewScreen extends React.Component {
 
   _goToImportByWif = () => {
     this.props.navigation.navigate('ImportByWif');
+  };
+
+  _goToImportByAddress = () => {
+    this.props.navigation.navigate('ImportByAddress');
   };
 }
 

@@ -83,8 +83,8 @@ export default class SetPasswordScreen extends React.Component {
     } else {
       this._initWallet(password).then((res) => {
         set(this.props.stores.wallet, {
-          hasWif: res.hasWif,
-          hasMnemonic: res.hasMnemonic
+          hasWif: !!res.hasWif,
+          hasMnemonic: !!res.hasMnemonic
         });
         Toast.show(i18n.t('account.setPassword.setSuccess'));
         this.props.navigation.navigate('Home');
@@ -94,7 +94,11 @@ export default class SetPasswordScreen extends React.Component {
 
   _initWallet = async (password) => {
     const type = this.props.navigation.getParam('from', '');
-    if (type === 'wif') {
+    if (type === 'address') {
+      const address = this.props.navigation.getParam('address', '');
+      await wallet.encryptAndSaveAddress(address, password);
+      return {};
+    } else if (type === 'wif') {
       const wif = this.props.navigation.getParam('wif', '');
       // todo try catch
       await wallet.encryptAndSaveWif(wif, password);
