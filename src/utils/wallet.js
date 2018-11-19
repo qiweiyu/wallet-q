@@ -22,6 +22,10 @@ const getAddress = (node, network) => {
   return bitcoin.payments.p2pkh({ pubkey: node.publicKey, network }).address;
 };
 
+const getDefaultChangeAddress = () => {
+  return stores.wallet.address;
+};
+
 const generateMnemonic = () => {
   return bip39.generateMnemonic();
 };
@@ -230,6 +234,7 @@ export default {
   getDefaultNetwork,
   getDefaultDerivePath,
   getAddress,
+  getDefaultChangeAddress,
   generateMnemonic,
   validateMnemonic,
   validateWif,

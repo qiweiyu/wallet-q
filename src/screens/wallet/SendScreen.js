@@ -111,6 +111,21 @@ export default class SendScreen extends React.Component {
         return false;
       }
       const { inputs, outputs, fee } = res;
+      outputs.forEach((output, index) => {
+        output.address = output.address ? output.address : wallet.getDefaultChangeAddress();
+        outputs[index] = output;
+      });
+      this.props.navigation.navigate('UnlockScreen', {
+        from: 'send',
+        options: {
+          address: this.store.address,
+          amount: this.store.amount,
+          fee1: wallet.changeUnitFromSatTo1(fee),
+          inputs,
+          outputs,
+          fee,
+        },
+      });
     });
   };
 

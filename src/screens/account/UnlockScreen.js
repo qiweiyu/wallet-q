@@ -24,13 +24,14 @@ export default class UnlockScreen extends React.Component {
     const { params } = navigation.state;
     return {
       header: null,
-      gesturesEnabled: params.from !== 'unlock'
+      gesturesEnabled: params.from !== 'send',
     };
   };
 
   @observable
   store = {
     isError: false,
+    from: '',
   };
 
   onBackButtonPressAndroid = () => {
@@ -40,6 +41,7 @@ export default class UnlockScreen extends React.Component {
 
   componentDidMount() {
     this.props.stores.wallet.unlocking();
+    this.store.from = this.props.navigation.getParam('from');
   };
 
   render() {
@@ -54,24 +56,36 @@ export default class UnlockScreen extends React.Component {
               hasHeader={false}
               isWarning={this.store.isError}
               top={120}
-              onFinish={this._checkPassword}
-              message={i18n.t('account.recover.drawGestureToUnlock')}
-              warningMessage={i18n.t('account.recover.drawGestureError')}
+              onFinish={this.handleFinish}
+              message={i18n.t('account.unlock.drawGestureToUnlock')}
+              warningMessage={i18n.t('account.unlock.drawGestureError')}
             />
           </View>
           <ScrollView/>
           <View>
-            <BigButton type={'danger'} onPress={this._logout}>
-              {i18n.t('account.recover.logout')}
-            </BigButton>
+            {this.store.from === 'auth' &&
+            <BigButton type={'danger'} onPress={this.logout}>
+              {i18n.t('account.unlock.logout')}
+            </BigButton>}
+            {this.store.from === 'send' &&
+            <BigButton type={'warning'} onPress={this.warning}>
+              {i18n.t('account.unlock.cancelSend')}
+            </BigButton>}
           </View>
         </Screen>
       </AndroidBackHandler>
     );
   }
 
+  handleFinish = (password) => {
+    if (this.store.from === 'auth') {
+      this.unlockFromAuth(password);
+    } else if (this.store.from === 'send') {
+    }
+  };
+
   @action
-  _checkPassword = (password) => {
+  unlockFromAuth = (password) => {
     wallet.decryptLocalSavedWallet(password).then(res => {
       if (!res) {
         this.store.isError = false;
@@ -79,9 +93,9 @@ export default class UnlockScreen extends React.Component {
       } else {
         set(this.props.stores.wallet, {
           hasWif: !!res.wif,
-          hasMnemonic: !!res.mnemonic
+          hasMnemonic: !!res.mnemonic,
         });
-        Toast.show(i18n.t('account.recover.unlockSuccess'));
+        Toast.show(i18n.t('account.unlock.unlockSuccess'));
         this.props.stores.wallet.unlock();
         this.props.navigation.goBack();
       }
@@ -89,20 +103,22 @@ export default class UnlockScreen extends React.Component {
   };
 
   @action
-  _logout = () => {
+  logout = () => {
     Alert.alert(
-      i18n.t('account.recover.logout'),
-      i18n.t('account.recover.logoutDesc'),
+      i18n.t('account.unlock.logout'),
+      i18n.t('account.unlock.logoutDesc'),
       [
         {
           text: i18n.t('common.cancel'), onPress: () => {
         },
         },
-        { text: i18n.t('common.ok'), onPress: () => {
+        {
+          text: i18n.t('common.ok'), onPress: () => {
           wallet.destroyWallet().then(() => {
             this.props.navigation.navigate('NewAccount');
           });
-        } },
+        },
+        },
       ],
       { cancelable: false });
   };
@@ -121,5 +137,5 @@ const styles = StyleSheet.create({
   },
   passwordArea: {
     height: 300,
-  }
+  },
 });

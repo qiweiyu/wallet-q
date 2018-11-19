@@ -44,12 +44,15 @@ export default {
       importByWif: 'Import Wallet By Private Key (WIF)',
       importByAddress: 'Import Wallet By Address',
     },
-    recover: {
+    unlock: {
       drawGestureToUnlock: 'Draw Gesture Password To Unlock Your Wallet',
       drawGestureError: 'Gesture Password is wrong',
       logout: 'LOGOUT',
       logoutDesc: 'Logout will destroy the private data stores in this device, please ensure you have backed up your private key or mnemonics',
       unlockSuccess: 'Unlock Success',
+      sendMessage1: 'Will send ',
+      sendMessage2: ' to address ',
+      cancelSend: 'Cancel Transfer',
     },
     setPassword: {
       title: 'Set Unlock Password',
