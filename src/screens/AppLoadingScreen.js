@@ -18,7 +18,7 @@ export default class AppLoadingScreen extends React.Component {
     this._loading().then(() => {
       let nextScreen = 'NewAccount';
       if (this.props.stores.wallet.address) {
-        nextScreen = 'RecoverAccount';
+        nextScreen = 'Home';
       }
       this.props.navigation.navigate(nextScreen);
     });

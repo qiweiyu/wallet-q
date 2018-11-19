@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
+import { AndroidBackHandler } from 'react-navigation-backhandler';
 
 import { Screen, BigButton } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
@@ -18,9 +19,13 @@ import i18n from 'src/i18n';
 import wallet from 'src/utils/wallet';
 
 @inject('stores') @observer
-export default class RecoverScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
+export default class UnlockScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return {
+      header: null,
+      gesturesEnabled: params.from !== 'unlock'
+    };
   };
 
   @observable
@@ -28,29 +33,40 @@ export default class RecoverScreen extends React.Component {
     isError: false,
   };
 
+  onBackButtonPressAndroid = () => {
+    // directly return true, do nothing
+    return true;
+  };
+
+  componentDidMount() {
+    this.props.stores.wallet.unlocking();
+  };
+
   render() {
     return (
-      <Screen>
-        <View style={styles.logoContainer}>
-          <Image source={logo} style={styles.logo}></Image>
-        </View>
-        <View style={styles.passwordArea}>
-          <GesturePassword
-            hasHeader={false}
-            isWarning={this.store.isError}
-            top={120}
-            onFinish={this._checkPassword}
-            message={i18n.t('account.recover.drawGestureToUnlock')}
-            warningMessage={i18n.t('account.recover.drawGestureError')}
-          />
-        </View>
-        <ScrollView/>
-        <View>
-          <BigButton type={'danger'} onPress={this._logout}>
-            {i18n.t('account.recover.logout')}
-          </BigButton>
-        </View>
-      </Screen>
+      <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
+        <Screen>
+          <View style={styles.logoContainer}>
+            <Image source={logo} style={styles.logo}/>
+          </View>
+          <View style={styles.passwordArea}>
+            <GesturePassword
+              hasHeader={false}
+              isWarning={this.store.isError}
+              top={120}
+              onFinish={this._checkPassword}
+              message={i18n.t('account.recover.drawGestureToUnlock')}
+              warningMessage={i18n.t('account.recover.drawGestureError')}
+            />
+          </View>
+          <ScrollView/>
+          <View>
+            <BigButton type={'danger'} onPress={this._logout}>
+              {i18n.t('account.recover.logout')}
+            </BigButton>
+          </View>
+        </Screen>
+      </AndroidBackHandler>
     );
   }
 
@@ -66,7 +82,8 @@ export default class RecoverScreen extends React.Component {
           hasMnemonic: !!res.mnemonic
         });
         Toast.show(i18n.t('account.recover.unlockSuccess'));
-        this.props.navigation.navigate('Home');
+        this.props.stores.wallet.unlock();
+        this.props.navigation.goBack();
       }
     });
   };

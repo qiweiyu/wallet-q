@@ -1,15 +1,23 @@
 import React from 'react';
-import { createSwitchNavigator } from 'react-navigation';
+import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 
 import NewAccountNavigator from './NewAccountNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import AppLoadingScreen from 'src/screens/AppLoadingScreen';
-import RecoverScreen from 'src/screens/account/RecoverScreen';
+import UnlockScreen from 'src/screens/account/UnlockScreen';
 
-export default createSwitchNavigator({
+const RootStack = createSwitchNavigator({
   AppLoadingScreen,
   NewAccount: NewAccountNavigator,
-  // todo set the screen by stack
-  RecoverAccount: RecoverScreen,
   Main: MainTabNavigator,
 });
+
+export default createStackNavigator({
+    RootStack,
+    UnlockScreen,
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  },
+);

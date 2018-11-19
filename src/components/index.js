@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, AppState } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import { inject, observer } from 'mobx-react';
 import Styles from 'src/styles';
 import Colors from 'src/constants/Colors';
 
@@ -16,6 +17,7 @@ export class Screen extends React.Component {
   }
 }
 
+@inject('stores')@observer
 class AuthScreenNoNav extends React.Component {
   static hasListened = false;
   static appState = null;
@@ -29,6 +31,7 @@ class AuthScreenNoNav extends React.Component {
       this.installedListener = true;
       AuthScreenNoNav.hasListened = true;
     }
+    this.checkAndHandleUnlock();
   }
 
   componentWillUnmount() {
@@ -40,9 +43,23 @@ class AuthScreenNoNav extends React.Component {
 
   _handleAppStateChange = (nextAppState) => {
     if (AuthScreenNoNav.appState === 'background' && nextAppState === 'active') {
-      this.props.navigation.navigate('AppLoadingScreen');
+      this.checkAndHandleUnlock();
+    } else if (nextAppState === 'background') {
+      this.props.stores.wallet.lock();
     }
     AuthScreenNoNav.appState = nextAppState;
+  };
+
+  checkAndHandleUnlock = () => {
+    if (this.props.stores.wallet.isLocking()) {
+      this.popUnlockScreen();
+    }
+  };
+
+  popUnlockScreen = () => {
+    this.props.navigation.navigate('UnlockScreen', {
+      from: 'auth',
+    });
   };
 
   render() {

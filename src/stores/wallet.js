@@ -8,6 +8,7 @@ import config from 'src/config';
 const UTXO_REFRESH_TIME = 128000;
 
 export default class Wallet extends Model {
+  @observable lockStatus = 'lock';
   //todo set the address info by address group
   @observable address = '';
   @observable hasWif = false;
@@ -32,6 +33,25 @@ export default class Wallet extends Model {
   pageSize = 20;
 
   apiHost = config.api.host;
+
+  @action
+  unlocking = () => {
+    this.lockStatus = 'unlocking';
+  };
+
+  @action
+  lock = () => {
+    this.lockStatus = 'lock';
+  };
+
+  @action
+  unlock = () => {
+    this.lockStatus = 'unlock';
+  };
+
+  isLocking = () => {
+    return this.lockStatus === 'lock';
+  };
 
   @action
   setAddress = async (address) => {
