@@ -1,23 +1,21 @@
 import bip39 from 'bip39';
 import bip32 from 'bip32';
-import qtum from 'qtumjs-lib';
 import bitcoin from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
 import bs58check from 'bs58check';
 import coinSelect from 'coinselect';
+import config from 'src/config';
 import { aes256 } from './encrypt';
 import secureStore from './secureStore';
 import log from './log';
 import stores from 'src/stores';
 
-const qtumNetwork = qtum.networks.qtum;
-
 const getDefaultNetwork = () => {
-  return qtumNetwork;
+  return config.wallet.network;
 };
 
 const getDefaultDerivePath = () => {
-  return 'm/88\'/0\'/0\'';
+  return config.wallet.derivePath;
 };
 
 const getAddress = (node, network) => {
@@ -105,7 +103,7 @@ const encryptAndSaveMnemonic = async (mnemonic, password, path, network) => {
 
 const encryptAndSaveWif = async (wif, password, network) => {
   network = network || getDefaultNetwork();
-  const keyPair = bitcoin.ECPair.fromWIF(wif);
+  const keyPair = bitcoin.ECPair.fromWIF(wif, network);
   const address = getAddress(keyPair, network);
   const saveBody = aes256.encrypt(password, JSON.stringify({
     address,
