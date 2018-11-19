@@ -214,7 +214,15 @@ const changeFeeRateUnitFrom1KToSatB = (feeRate1) => {
 };
 
 const calFee = (utxoList, targets, feeRate1) => {
-  const feeRate = changeFeeRateUnitFrom1KToSatB(feeRate1);
+  const feeRate = Math.round(changeFeeRateUnitFrom1KToSatB(feeRate1));
+  utxoList.forEach((utxo, index) => {
+    utxo.value = parseInt(utxo.value);
+    utxoList[index] = utxo;
+  });
+  targets.forEach((target, index) => {
+    target.value = parseInt(target.value);
+    targets[index] = target;
+  });
   return coinSelect(utxoList, targets, feeRate);
 };
 

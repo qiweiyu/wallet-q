@@ -226,6 +226,7 @@ export default class Wallet extends Model {
       return this.utxoList;
     }
     try {
+      const address = this.address;
       const res = await this.get(`${this.apiHost}/address/${address}/utxo`);
       if (res) {
         const utxoList = [];

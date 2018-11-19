@@ -25,8 +25,8 @@ export default class SendScreen extends React.Component {
 
   @observable
   store = {
-    address: '',
-    amount: '0.0',
+    address: 'qZ5PbKt68ijThwBkBCzJhjAvYJuY6KDcFF',
+    amount: '0.1',
     feeRate: null,
     minFeeRate: null,
     maxFeeRate: null,
@@ -106,11 +106,11 @@ export default class SendScreen extends React.Component {
     if (!this.checkAmount()) {
       return false;
     }
-    this.porps.stores.wallet.fetchUtxo().then(utxoList => {
-      const { inputs, outputs, fee } = wallet.calFee(utxoList, [{
-        address: this.store.address,
-        value: wallet.changeUnitFrom1ToSat(this.store.amount),
-      }], this.store.feeRate);
+    this.calFee().then(res => {
+      if (!res) {
+        return false;
+      }
+      const { inputs, outputs, fee } = res;
     });
   };
 
@@ -128,8 +128,7 @@ export default class SendScreen extends React.Component {
         i18n.t('wallet.send.addressErrorDesc'),
         [
           {
-            text: i18n.t('common.ok'), onPress: () => {
-          },
+            text: i18n.t('common.ok'),
           },
         ],
         { cancelable: false });
@@ -152,8 +151,7 @@ export default class SendScreen extends React.Component {
         i18n.t('wallet.send.amountErrorDesc'),
         [
           {
-            text: i18n.t('common.ok'), onPress: () => {
-          },
+            text: i18n.t('common.ok'),
           },
         ],
         { cancelable: false });
@@ -161,6 +159,51 @@ export default class SendScreen extends React.Component {
     } else {
       return true;
     }
+  };
+
+  calFee = async () => {
+    return new Promise(resolve => {
+      this.props.stores.wallet.fetchUtxo().then(utxoList => {
+        const { inputs, outputs, fee } = wallet.calFee(utxoList, [{
+          address: this.store.address,
+          value: wallet.changeUnitFrom1ToSat(this.store.amount),
+        }], this.store.feeRate);
+        const fee1 = wallet.changeUnitFromSatTo1(fee);
+        Alert.alert(
+          i18n.t('wallet.send.fee'),
+          `${i18n.t('wallet.send.feeAmount')}: ${fee1} QTUM`,
+          [
+            {
+              text: i18n.t('common.cancel'),
+              onPress: () => {
+                resolve(false);
+              },
+            },
+            {
+              text: i18n.t('common.ok'),
+              onPress: () => {
+                if (!inputs || !outputs) {
+                  Alert.alert(
+                    i18n.t('wallet.send.fee'),
+                    i18n.t('wallet.send.feeAmountTooMuch'),
+                    [
+                      {
+                        text: i18n.t('common.ok'),
+                        onPress: () => {
+                          resolve(false);
+                        },
+                      },
+                    ],
+                    { cancelable: false });
+                } else {
+                  resolve({ inputs, outputs, fee });
+                }
+              },
+            },
+          ],
+          { cancelable: false });
+      });
+    });
   };
 }
 

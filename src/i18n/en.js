@@ -102,6 +102,8 @@ export default {
       amountTooMuch: 'Send amount greater than the available amount',
       amountError: 'Send amount should be a number greater than 0',
       amountErrorDesc: 'Please input a right amount',
+      feeAmount: 'The fee is',
+      feeAmountTooMuch: 'Fee and amount sum is greater than the available amount',
     },
   },
 };

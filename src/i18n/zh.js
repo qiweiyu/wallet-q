@@ -102,6 +102,8 @@ export default {
       amountTooMuch: '转账金额大于可用余额',
       amountError: '转账金额必须是一个大于零的数字',
       amountErrorDesc: '请输入正确的金额然后重试',
+      feeAmount: '本次转账手续费为',
+      feeAmountTooMuch: '手续费加上转账金额大于可用金额',
     },
   },
 };
