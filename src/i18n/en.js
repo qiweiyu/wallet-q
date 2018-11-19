@@ -21,6 +21,8 @@ export default {
         coinbase: 'Coinbase',
       },
     },
+    ok: 'OK',
+    cancel: 'Cancel',
   },
   components: {
     address: {
@@ -71,6 +73,9 @@ export default {
       wifEmpty: 'Private Key is Empty',
       wifError: 'Private Key cannot be decoded',
       wifErrorDesc: 'Please input the right private key',
+      addressEmpty: 'Address is Empty',
+      addressError: 'Address cannot be decoded',
+      addressErrorDesc: 'Please input the right address',
     },
   },
   wallet: {
@@ -84,6 +89,19 @@ export default {
     },
     send: {
       title: 'Transfer',
+      address: 'Receiver\'s Address',
+      amount: 'Amount',
+      feeRate: 'Fee Rate',
+      recommend: 'Recommend',
+      fee: 'Fee',
+      availableAmount: 'Available Amount',
+      build: 'Build Transfer',
+      addressEmpty: 'Address is Empty',
+      addressError: 'Address cannot be decoded',
+      addressErrorDesc: 'Please input the right address',
+      amountTooMuch: 'Send amount greater than the available amount',
+      amountError: 'Send amount should be a number greater than 0',
+      amountErrorDesc: 'Please input a right amount',
     },
   },
 };

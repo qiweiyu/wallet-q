@@ -6,9 +6,10 @@ import {
   View,
   Text,
   TextInput,
+  Slider,
 } from 'react-native';
-import { observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { observable, set } from 'mobx';
+import { inject, observer } from 'mobx-react';
 
 import Colors from 'src/constants/Colors';
 import { Screen, BigButton } from 'src/components';
@@ -16,7 +17,7 @@ import { Screen, BigButton } from 'src/components';
 import i18n from 'src/i18n';
 import wallet from 'src/utils/wallet';
 
-@observer
+@inject('stores') @observer
 export default class SendScreen extends React.Component {
   static navigationOptions = {
     title: i18n.t('wallet.send.title'),
@@ -24,66 +25,142 @@ export default class SendScreen extends React.Component {
 
   @observable
   store = {
-    input: '',
+    address: '',
+    amount: '0.0',
+    feeRate: null,
+    minFeeRate: null,
+    maxFeeRate: null,
   };
+
+  componentDidMount() {
+    this.props.stores.wallet.fetchFeeRate().then(() => {
+      const feeRate = this.props.stores.wallet.feeRate;
+      set(this.store, {
+        feeRate: feeRate,
+        minFeeRate: feeRate * 0.5,
+        maxFeeRate: feeRate * 3,
+      });
+    });
+  }
 
   render() {
     return (
       <Screen>
         <View style={styles.contentContainer}>
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>{i18n.t('account.import.wifLabel')}</Text>
+            <Text style={styles.inputLabel}>{i18n.t('wallet.send.address')}</Text>
             <TextInput
               style={styles.input}
               underlineColorAndroid={'transparent'}
               editable={true}
-              multiline={true}
-              value={this.store.input}
-              onChangeText={(text) => this.store.input = text}/>
+              value={this.store.address}
+              onChangeText={(text) => this.store.address = text}/>
           </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>
+              {i18n.t('wallet.send.amount')}
+              ({i18n.t('wallet.send.availableAmount')}{this.props.stores.wallet.mature} QTUM)
+            </Text>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid={'transparent'}
+              keyboardType={'numeric'}
+              editable={true}
+              value={this.store.amount}
+              onChangeText={(text) => {
+                if (/^\d*\.?\d*$/.test(text)) {
+                  this.store.amount = text;
+                }
+              }}/>
+          </View>
+          {
+            this.store.feeRate && (
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>
+                  {i18n.t('wallet.send.feeRate')}
+                  ({i18n.t('wallet.send.recommend')}:{this.props.stores.wallet.feeRate})
+                </Text>
+                <Slider
+                  maximumValue={this.store.maxFeeRate}
+                  minimumValue={this.store.minFeeRate}
+                  value={this.store.feeRate}
+                  onValueChange={value => this.store.feeRate = parseFloat(parseFloat(value).toFixed(8))}
+                />
+                <Text style={styles.inputLabel}>{this.store.feeRate}</Text>
+              </View>
+            )
+          }
         </View>
         <ScrollView/>
         <View>
-          <BigButton onPress={this._confirm}>{i18n.t('account.import.confirm')}</BigButton>
+          <BigButton onPress={this.build}>{i18n.t('wallet.send.build')}</BigButton>
         </View>
       </Screen>
     );
   }
 
-  _confirm = () => {
-    this.store.input = this.store.input.trim();
-    if (this.store.input === '') {
+  build = () => {
+    if (!this.checkAddress()) {
+      return false;
+    }
+    if (!this.checkAmount()) {
+      return false;
+    }
+    this.porps.stores.wallet.fetchUtxo().then(utxoList => {
+      const { inputs, outputs, fee } = wallet.calFee(utxoList, [{
+        address: this.store.address,
+        value: wallet.changeUnitFrom1ToSat(this.store.amount),
+      }], this.store.feeRate);
+    });
+  };
+
+  checkAddress = () => {
+    this.store.address = this.store.address.trim();
+    let error = null;
+    if (this.store.address === '') {
+      error = i18n.t('wallet.send.addressEmpty');
+    } else if (!wallet.validateAddress(this.store.address)) {
+      error = i18n.t('wallet.send.addressError');
+    }
+    if (error) {
       Alert.alert(
-        i18n.t('account.import.wifEmpty'),
-        i18n.t('account.import.wifErrorDesc'),
+        error,
+        i18n.t('wallet.send.addressErrorDesc'),
         [
           {
-            text: 'OK', onPress: () => {
+            text: i18n.t('common.ok'), onPress: () => {
           },
           },
         ],
         { cancelable: false });
-    } else if (!wallet.validateWif(this.store.input)) {
-      Alert.alert(
-        i18n.t('account.import.wifError'),
-        i18n.t('account.import.wifErrorDesc'),
-        [
-          {
-            text: 'OK', onPress: () => {
-          },
-          },
-        ],
-        { cancelable: false });
+      return false;
     } else {
-      this._goToSetPassword();
+      return true;
     }
   };
 
-  _goToSetPassword = () => {
-    this.props.navigation.navigate('SetPassword', {
-      from: 'wif',
-      wif: this.store.input,
-    });
+  checkAmount = () => {
+    let error = null;
+    if (isNaN(this.store.amount) || this.store.amount <= 0) {
+      error = i18n.t('wallet.send.amountError');
+    } else if (this.store.amount > parseFloat(this.props.stores.wallet.mature.replace(',', ''))) {
+      error = i18n.t('wallet.send.amountTooMuch');
+    }
+    if (error) {
+      Alert.alert(
+        error,
+        i18n.t('wallet.send.amountErrorDesc'),
+        [
+          {
+            text: i18n.t('common.ok'), onPress: () => {
+          },
+          },
+        ],
+        { cancelable: false });
+      return false;
+    } else {
+      return true;
+    }
   };
 }
 
@@ -96,30 +173,17 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: 12,
     lineHeight: 24,
     color: Colors.primary,
   },
   input: {
-    borderColor: '#999',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    padding: 0,
-    textAlignVertical: 'top',
-    fontSize: 14,
-    lineHeight: 18,
-    height: 80,
-    marginBottom: 20,
-  },
-  path: {
-    borderColor: '#999',
-    borderStyle: 'solid',
+    borderBottomColor: '#999',
     borderBottomWidth: 1,
     padding: 0,
     textAlignVertical: 'top',
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 18,
-    height: 24,
     marginBottom: 20,
   },
 });

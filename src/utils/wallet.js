@@ -4,6 +4,7 @@ import qtum from 'qtumjs-lib';
 import bitcoin from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
 import bs58check from 'bs58check';
+import coinSelect from 'coinselect';
 import { aes256 } from './encrypt';
 import secureStore from './secureStore';
 import log from './log';
@@ -201,23 +202,22 @@ const calTxType = (tx, address = '') => {
   return type;
 };
 
-const addAmountDelimiters = (numString) => {
-  return numString.replace(/^(\d{1,3})((\d{3})*)(\.\d+|)$/g, (_, before, middle, __, after) => {
-    return before + middle.replace(/(\d{3})/g, ',$1') + after;
-  });
-};
-
 const satPos = 8;
 const changeUnitFromSatTo1 = (amountSat) => {
-  const sign = amountSat >= 0;
-  if (!sign) {
-    amountSat = amountSat * -1;
-  }
-  const amountSatString = amountSat.toString().padStart(satPos + 1, '0');
-  return (sign ? '' : '-') + addAmountDelimiters((amountSatString.slice(0, -1 * satPos) + '.' + amountSatString.slice(-1 * satPos)).replace(/\.?0*$/g, ''));
+  const amountSatBig = new BigNumber(amountSat);
+  return amountSatBig.div(Math.pow(10, satPos)).toFormat();
 };
-const changeUnitFrom1ToSat = (amount) => {
-  return amount * ( 10 ** satPos );
+const changeUnitFrom1ToSat = (amount1) => {
+  const amountBig = new BigNumber(amount1);
+  return amountBig.times(Math.pow(10, satPos)).toString();
+};
+const changeFeeRateUnitFrom1KToSatB = (feeRate1) => {
+  return feeRate1 * (10 ** satPos) / 1024;
+};
+
+const calFee = (utxoList, targets, feeRate1) => {
+  const feeRate = changeFeeRateUnitFrom1KToSatB(feeRate1);
+  return coinSelect(utxoList, targets, feeRate);
 };
 
 export default {
@@ -237,4 +237,5 @@ export default {
   calTxType,
   changeUnitFromSatTo1,
   changeUnitFrom1ToSat,
+  calFee,
 };

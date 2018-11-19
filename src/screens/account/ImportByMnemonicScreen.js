@@ -65,10 +65,10 @@ export default class ImportByMnemonicScreen extends React.Component {
         i18n.t('account.import.mnemonicErrorDesc'),
         [
           {
-            text: 'Cancel', onPress: () => {},
+            text: i18n.t('common.cancel'), onPress: () => {},
           },
           {
-            text: 'OK', onPress: () => {this._goToSetPassword();},
+            text: i18n.t('common.ok'), onPress: () => {this._goToSetPassword();},
           },
         ],
         { cancelable: false });
@@ -78,10 +78,10 @@ export default class ImportByMnemonicScreen extends React.Component {
         i18n.t('account.import.mnemonicErrorDesc'),
         [
           {
-            text: 'Cancel', onPress: () => {},
+            text: i18n.t('common.cancel'), onPress: () => {},
           },
           {
-            text: 'OK', onPress: () => {this._goToSetPassword();},
+            text: i18n.t('common.ok'), onPress: () => {this._goToSetPassword();},
           },
         ],
         { cancelable: false });

@@ -5,7 +5,10 @@ import wallet from 'src/utils/wallet';
 import log from 'src/utils/log';
 import config from 'src/config';
 
+const UTXO_REFRESH_TIME = 128000;
+
 export default class Wallet extends Model {
+  //todo set the address info by address group
   @observable address = '';
   @observable hasWif = false;
   @observable hasMnemonic = false;
@@ -23,6 +26,9 @@ export default class Wallet extends Model {
   @observable balanceHistoryCount = 0;
   @observable balanceHistoryPage = 0;
   @observable txMap = new Map();
+  @observable feeRate = 0;
+  @observable utxoList = [];
+  @observable utxoFetchTime = null;
   pageSize = 20;
 
   apiHost = config.api.host;
@@ -73,8 +79,11 @@ export default class Wallet extends Model {
       this.totalTxCount = 0;
       this.qrc20List = [];
       this.balanceHistory = [];
+      this.balanceHistoryMap = new Map();
       this.balanceHistoryCount = 0;
       this.balanceHistoryPage = 0;
+      this.utxoList = [];
+      this.utxoFetchTime = null;
       return true;
     } catch (error) {
       log.warning('async storage remove address error', {
@@ -198,4 +207,41 @@ export default class Wallet extends Model {
       log.warningWithToast('common.network.tx.notFound', 'Fetch Tx Failed', error);
     }
   };
+
+  @action
+  fetchFeeRate = async () => {
+    try {
+      const res = await this.get(`${this.apiHost}/info`);
+      if (res) {
+        this.feeRate = res.feeRate;
+      }
+    } catch (error) {
+      log.fatal('Fetch qtum info Failed', error);
+    }
+  };
+
+  @action
+  fetchUtxo = async () => {
+    if (this.utxoList.length && ((Date.now() - this.utxoFetchTime) < UTXO_REFRESH_TIME)) {
+      return this.utxoList;
+    }
+    try {
+      const res = await this.get(`${this.apiHost}/address/${address}/utxo`);
+      if (res) {
+        const utxoList = [];
+        res.forEach((item) => {
+          if (item.confirmations > 500) {
+            utxoList.push(item);
+          }
+        });
+        set(this, {
+          utxoList,
+          utxoFetchTime: Date.now(),
+        });
+      }
+    } catch (error) {
+      log.warningWithToast('common.network.address.failed', 'Fetch Utxo Failed', error);
+    }
+    return this.utxoList;
+  }
 }

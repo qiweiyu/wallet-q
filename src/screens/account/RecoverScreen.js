@@ -78,10 +78,10 @@ export default class RecoverScreen extends React.Component {
       i18n.t('account.recover.logoutDesc'),
       [
         {
-          text: 'Cancel', onPress: () => {
+          text: i18n.t('common.cancel'), onPress: () => {
         },
         },
-        { text: 'OK', onPress: () => {
+        { text: i18n.t('common.ok'), onPress: () => {
           wallet.destroyWallet().then(() => {
             this.props.navigation.navigate('NewAccount');
           });

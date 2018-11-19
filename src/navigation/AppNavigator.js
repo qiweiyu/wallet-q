@@ -9,6 +9,7 @@ import RecoverScreen from 'src/screens/account/RecoverScreen';
 export default createSwitchNavigator({
   AppLoadingScreen,
   NewAccount: NewAccountNavigator,
+  // todo set the screen by stack
   RecoverAccount: RecoverScreen,
   Main: MainTabNavigator,
 });

@@ -58,7 +58,7 @@ export default class ImportByWifScreen extends React.Component {
         i18n.t('account.import.wifErrorDesc'),
         [
           {
-            text: 'OK', onPress: () => {
+            text: i18n.t('common.ok'), onPress: () => {
           },
           },
         ],
@@ -69,7 +69,7 @@ export default class ImportByWifScreen extends React.Component {
         i18n.t('account.import.wifErrorDesc'),
         [
           {
-            text: 'OK', onPress: () => {
+            text: i18n.t('common.ok'), onPress: () => {
           },
           },
         ],
@@ -109,17 +109,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 18,
     height: 80,
-    marginBottom: 20,
-  },
-  path: {
-    borderColor: '#999',
-    borderStyle: 'solid',
-    borderBottomWidth: 1,
-    padding: 0,
-    textAlignVertical: 'top',
-    fontSize: 14,
-    lineHeight: 18,
-    height: 24,
     marginBottom: 20,
   },
 });

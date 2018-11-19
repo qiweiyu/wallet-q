@@ -52,7 +52,7 @@ export default class ReceiveScreen extends React.Component {
   }
 
   onInputAmount = (text) => {
-    if (/^\d+\.?\d*$/.test(text)) {
+    if (/^\d*\.?\d*$/.test(text)) {
       this.store.amount = text;
     }
   };

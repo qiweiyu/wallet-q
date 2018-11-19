@@ -21,6 +21,8 @@ export default {
         coinbase: '区块头',
       },
     },
+    ok: '好',
+    cancel: '算了',
   },
   components: {
     address: {
@@ -87,6 +89,19 @@ export default {
     },
     send: {
       title: '转账',
+      address: '收款地址',
+      amount: '转账金额',
+      feeRate: '费率',
+      recommend: '推荐',
+      fee: '手续费',
+      availableAmount: '可用余额',
+      build: '创建交易',
+      addressEmpty: '地址为空',
+      addressError: '地址无法解码',
+      addressErrorDesc: '请输入正确的地址然后重试',
+      amountTooMuch: '转账金额大于可用余额',
+      amountError: '转账金额必须是一个大于零的数字',
+      amountErrorDesc: '请输入正确的金额然后重试',
     },
   },
 };
