@@ -263,5 +263,10 @@ export default class Wallet extends Model {
       log.warningWithToast('common.network.address.failed', 'Fetch Utxo Failed', error);
     }
     return this.utxoList;
-  }
+  };
+
+  @action
+  postTx = async (txHex) => {
+    this.post(`${this.apiHost}/tx/send`, txHex);
+  };
 }

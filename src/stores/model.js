@@ -16,11 +16,10 @@ export default class Model {
           join = '?';
         }
       }
-      let response = fetch(`${url}${join}${query}`);
-      response.then(res => {
+      fetch(`${url}${join}${query}`).then(res => {
         if (res.status !== 200) {
           log.warning('Api failed: ', {
-            url,
+            url: `${url}${join}${query}`,
             res,
           });
           reject(res);
@@ -32,7 +31,38 @@ export default class Model {
       }).catch(error => {
         // networking error
         log.warningWithToast('common.network.failed', 'Fetch failed: ', {
+          url: `${url}${join}${query}`,
+          res,
+          error: error.toString(),
+        });
+        resolve(null);
+      });
+    });
+  };
+
+  post = (url, body = '') => {
+    return new Promise((resolve, reject) => {
+      fetch(url, {
+        method: 'POST',
+        body,
+      }).then(res => {
+        if (res.status !== 200) {
+          log.warning('Api post failed: ', {
+            url,
+            body,
+            res,
+          });
+          reject(res);
+        } else {
+          res.json().then(responseJson => {
+            resolve(responseJson);
+          });
+        }
+      }).catch(error => {
+        // networking error
+        log.warningWithToast('common.network.failed', 'Fetch post failed: ', {
           url,
+          body,
           error: error.toString(),
         });
         resolve(null);

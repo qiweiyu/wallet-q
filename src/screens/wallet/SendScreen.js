@@ -173,7 +173,9 @@ export default class SendScreen extends React.Component {
         {
           text: i18n.t('wallet.send.send'),
           onPress: () => {
-            console.log(tx.toHex());
+            this.props.stores.wallet.postTx(tx.toHex()).then(res => {
+              console.log('post res', res);
+            });
           },
         },
       ],
