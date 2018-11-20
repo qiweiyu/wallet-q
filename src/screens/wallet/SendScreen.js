@@ -30,6 +30,9 @@ export default class SendScreen extends React.Component {
     feeRate: null,
     minFeeRate: null,
     maxFeeRate: null,
+    fee: 0,
+    inputs: [],
+    outputs: [],
   };
 
   componentDidMount() {
@@ -111,6 +114,11 @@ export default class SendScreen extends React.Component {
         return false;
       }
       const { inputs, outputs, fee } = res;
+      set(this.store, {
+        inputs,
+        outputs,
+        fee,
+      });
       outputs.forEach((output, index) => {
         output.address = output.address ? output.address : wallet.getDefaultChangeAddress();
         outputs[index] = output;
@@ -124,12 +132,29 @@ export default class SendScreen extends React.Component {
     });
   };
 
+  renderUnlockMessage = () => {
+    return (
+      <View>
+        <Text style={styles.unlockMessageText}>
+          {i18n.t('wallet.send.unlockMessage1')}
+          <Text style={styles.unlockMessageTextHighlight}>{this.store.amount} QTUM</Text>
+          {i18n.t('wallet.send.unlockMessage2')}
+        </Text>
+        <Text style={[styles.unlockMessageText, styles.unlockMessageTextHighlight]}>{this.store.address}</Text>
+        <Text style={styles.unlockMessageText}>
+          {i18n.t('wallet.send.fee')}
+          <Text style={styles.unlockMessageTextHighlight}>{wallet.changeUnitFromSatTo1(this.store.fee)} QTUM</Text>
+        </Text>
+      </View>
+    );
+  };
+
   renderCancelSend = (dismiss) => {
     return (
       <BigButton type={'warning'} onPress={() => {
         dismiss();
       }}>
-        {i18n.t('account.send.cancelSend')}
+        {i18n.t('wallet.send.cancelSend')}
       </BigButton>
     );
   };
@@ -251,5 +276,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     marginBottom: 20,
+  },
+  unlockMessageText: {
+    textAlign: 'center',
+    color: Colors.primary,
+    fontSize: 14,
+    lineHeight: 18,
+    marginTop: 2,
+    marginBottom: 2,
+  },
+  unlockMessageTextHighlight: {
+    fontWeight: 'bold',
   },
 });

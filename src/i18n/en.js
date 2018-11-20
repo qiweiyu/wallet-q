@@ -107,6 +107,8 @@ export default {
       feeAmount: 'The fee is',
       feeAmountTooMuch: 'Fee and amount sum is greater than the available amount',
       cancelSend: 'Cancel Transfer',
+      unlockMessage1: 'Will send ',
+      unlockMessage2: ' to address ',
     },
   },
 };

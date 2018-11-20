@@ -65,6 +65,8 @@ export default class UnlockScreen extends React.Component {
               message={i18n.t('account.unlock.drawGestureToUnlock')}
               warningMessage={i18n.t('account.unlock.drawGestureError')}
             />
+          </View>
+          <View style={styles.messageContainer}>
             {this.store.messageComponentRender instanceof Function && this.store.messageComponentRender()}
           </View>
           <ScrollView/>
@@ -109,5 +111,8 @@ const styles = StyleSheet.create({
   },
   passwordArea: {
     height: 300,
+  },
+  messageContainer: {
+    alignItems: 'center',
   },
 });

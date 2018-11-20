@@ -4,7 +4,7 @@ import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import NewAccountNavigator from './NewAccountNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import AppLoadingScreen from 'src/screens/AppLoadingScreen';
-import UnlockScreen from 'src/screens/account/UnlockScreen';
+import UnlockScreen from 'src/screens/UnlockScreen';
 
 const RootStack = createSwitchNavigator({
   AppLoadingScreen,

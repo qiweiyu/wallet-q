@@ -107,6 +107,8 @@ export default {
       feeAmount: '本次转账手续费为',
       feeAmountTooMuch: '手续费加上转账金额大于可用金额',
       cancelSend: '取消转账',
+      unlockMessage1: '将要发送',
+      unlockMessage2: '到地址',
     },
   },
 };
