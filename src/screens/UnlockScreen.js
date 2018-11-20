@@ -2,6 +2,7 @@ import React from 'react';
 import { observable, action } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import {
+  AppState,
   Image,
   ScrollView,
   View,
@@ -34,6 +35,11 @@ export default class UnlockScreen extends React.Component {
     onUnlock: null,
   };
 
+  static hasListened = false;
+  static appState = null;
+
+  installedListener = false;
+
   onBackButtonPressAndroid = () => {
     // return false, and the default handler will handle it
     // return true, do nothing, so can not cancel
@@ -46,11 +52,28 @@ export default class UnlockScreen extends React.Component {
     this.store.messageComponentRender = this.props.navigation.getParam('messageComponentRender');
     this.store.bottomComponentRender = this.props.navigation.getParam('bottomComponentRender');
     this.store.onUnlock = this.props.navigation.getParam('onUnlock');
+    if (!UnlockScreen.hasListened) {
+      UnlockScreen.appState = AppState.currentAppState;
+      AppState.addEventListener('change', this._handleAppStateChange);
+      this.installedListener = true;
+      UnlockScreen.hasListened = true;
+    }
   };
 
   @action
   componentWillUnmount() {
     this.props.stores.app.unlockingScreenPopped = false;
+    if (this.installedListener) {
+      AppState.removeEventListener('change', this._handleAppStateChange);
+      UnlockScreen.hasListened = false;
+    }
+  };
+
+  _handleAppStateChange = (nextAppState) => {
+    if (this.store.cancelAble && nextAppState === 'background') {
+      this.dismiss();
+    }
+    UnlockScreen.appState = nextAppState;
   };
 
   render() {
