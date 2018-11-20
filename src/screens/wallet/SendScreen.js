@@ -30,9 +30,10 @@ export default class SendScreen extends React.Component {
     feeRate: null,
     minFeeRate: null,
     maxFeeRate: null,
-    fee: 0,
+    feeSat: 0,
     inputs: [],
     outputs: [],
+    txb: null,
   };
 
   componentDidMount() {
@@ -114,14 +115,15 @@ export default class SendScreen extends React.Component {
         return false;
       }
       const { inputs, outputs, fee } = res;
-      set(this.store, {
-        inputs,
-        outputs,
-        fee,
-      });
       outputs.forEach((output, index) => {
         output.address = output.address ? output.address : wallet.getDefaultChangeAddress();
         outputs[index] = output;
+      });
+      set(this.store, {
+        inputs,
+        outputs,
+        feeSat: fee,
+        txb: wallet.buildTransaction(inputs, outputs),
       });
       this.props.stores.wallet.unlock(this.props.navigation, {
         cancelAble: true,
@@ -143,7 +145,7 @@ export default class SendScreen extends React.Component {
         <Text style={[styles.unlockMessageText, styles.unlockMessageTextHighlight]}>{this.store.address}</Text>
         <Text style={styles.unlockMessageText}>
           {i18n.t('wallet.send.fee')}
-          <Text style={styles.unlockMessageTextHighlight}>{wallet.changeUnitFromSatTo1(this.store.fee)} QTUM</Text>
+          <Text style={styles.unlockMessageTextHighlight}>{wallet.changeUnitFromSatTo1(this.store.feeSat)} QTUM</Text>
         </Text>
       </View>
     );
@@ -160,6 +162,22 @@ export default class SendScreen extends React.Component {
   };
 
   onUnlock = (res) => {
+    const tx = wallet.signTransaction(this.store.txb, this.store.inputs, res.wif);
+    Alert.alert(
+      i18n.t('wallet.send.finalConfirm'),
+      `${i18n.t('wallet.send.unlockMessage1')} ${this.store.amount} QTUM ${i18n.t('wallet.send.unlockMessage2')} ${this.store.address} ${i18n.t('wallet.send.fee')}: ${wallet.changeUnitFromSatTo1(this.store.feeSat)} QTUM`,
+      [
+        {
+          text: i18n.t('wallet.send.cancelSend'),
+        },
+        {
+          text: i18n.t('wallet.send.send'),
+          onPress: () => {
+            console.log(tx.toHex());
+          },
+        },
+      ],
+      { cancelable: false });
   };
 
   checkAddress = () => {

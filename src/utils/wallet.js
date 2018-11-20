@@ -230,6 +230,25 @@ const calFee = (utxoList, targets, feeRate1) => {
   return coinSelect(utxoList, targets, feeRate);
 };
 
+const buildTransaction = (inputs, outputs) => {
+  const txb = new bitcoin.TransactionBuilder(getDefaultNetwork());
+  inputs.forEach(input => {
+    txb.addInput(input.transactionId, input.outputIndex);
+  });
+  outputs.forEach(output => {
+    txb.addOutput(output.address, output.value);
+  });
+  return txb;
+};
+
+const signTransaction = (txb, inputs, wif) => {
+  const key = bitcoin.ECPair.fromWIF(wif, getDefaultNetwork());
+  inputs.forEach((input, index) => {
+    txb.sign(index, key);
+  });
+  return txb.build();
+};
+
 export default {
   getDefaultNetwork,
   getDefaultDerivePath,
@@ -249,4 +268,6 @@ export default {
   changeUnitFromSatTo1,
   changeUnitFrom1ToSat,
   calFee,
+  buildTransaction,
+  signTransaction,
 };

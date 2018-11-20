@@ -109,6 +109,8 @@ export default {
       cancelSend: 'Cancel Transfer',
       unlockMessage1: 'Will send ',
       unlockMessage2: ' to address ',
+      finalConfirm: 'The final confirm',
+      send: 'Send',
     },
   },
 };

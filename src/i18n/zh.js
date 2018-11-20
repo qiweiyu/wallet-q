@@ -109,6 +109,8 @@ export default {
       cancelSend: '取消转账',
       unlockMessage1: '将要发送',
       unlockMessage2: '到地址',
+      finalConfirm: '最后一次确认',
+      send: '转账',
     },
   },
 };
