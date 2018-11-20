@@ -36,6 +36,15 @@ export default {
     },
   },
   account: {
+    unlock: {
+      drawGestureToUnlock: '绘制手势密码解锁钱包',
+      drawGestureError: '手势密码错误',
+    },
+    auth: {
+      logout: '退出登录',
+      logoutDesc: '退出登录将会清空本机存储的密钥信息，请确保您已经备份好了私钥或者助记词',
+      unlockSuccess: '解锁成功',
+    },
     new: {
       welcome1: '欢迎使用Wallet·Q',
       welcome2: '为您打开区块链的大门',
@@ -43,16 +52,6 @@ export default {
       importByMnemonic: '从助记词导入钱包',
       importByWif: '从私钥(WIF)导入钱包',
       importByAddress: '从地址导入钱包',
-    },
-    unlock: {
-      drawGestureToUnlock: '绘制手势密码解锁钱包',
-      drawGestureError: '手势密码错误',
-      logout: '退出登录',
-      logoutDesc: '退出登录将会清空本机存储的密钥信息，请确保您已经备份好了私钥或者助记词',
-      unlockSuccess: '解锁成功',
-      sendMessage1: '将要发送',
-      sendMessage2: '到地址',
-      cancelSend: '取消转账',
     },
     setPassword: {
       title: '设置解锁密码',
@@ -107,6 +106,7 @@ export default {
       amountErrorDesc: '请输入正确的金额然后重试',
       feeAmount: '本次转账手续费为',
       feeAmountTooMuch: '手续费加上转账金额大于可用金额',
+      cancelSend: '取消转账',
     },
   },
 };

@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, AppState } from 'react-native';
+import { Alert, View, TouchableOpacity, Text, AppState } from 'react-native';
+import Toast from 'react-native-simple-toast';
 import { withNavigation } from 'react-navigation';
+import { set } from 'mobx';
 import { inject, observer } from 'mobx-react';
+import i18n from 'src/i18n';
+import wallet from 'src/utils/wallet';
 import Styles from 'src/styles';
 import Colors from 'src/constants/Colors';
 
@@ -17,7 +21,7 @@ export class Screen extends React.Component {
   }
 }
 
-@inject('stores')@observer
+@inject('stores') @observer
 class AuthScreenNoNav extends React.Component {
   static hasListened = false;
   static appState = null;
@@ -52,14 +56,47 @@ class AuthScreenNoNav extends React.Component {
 
   checkAndHandleUnlock = () => {
     if (this.props.stores.wallet.isLocking()) {
-      this.popUnlockScreen();
+      this.props.stores.wallet.unlock(this.props.navigation, {
+        bottomComponentRender: this.renderLogout,
+        onUnlock: this.onUnlock,
+      });
     }
   };
 
-  popUnlockScreen = () => {
-    this.props.navigation.navigate('UnlockScreen', {
-      from: 'auth',
+  onUnlock = (res) => {
+    set(this.props.stores.wallet, {
+      hasWif: !!res.wif,
+      hasMnemonic: !!res.mnemonic,
     });
+    Toast.show(i18n.t('account.auth.unlockSuccess'));
+  };
+
+  logout = () => {
+    Alert.alert(
+      i18n.t('account.auth.logout'),
+      i18n.t('account.auth.logoutDesc'),
+      [
+        {
+          text: i18n.t('common.cancel'), onPress: () => {
+        },
+        },
+        {
+          text: i18n.t('common.ok'), onPress: () => {
+          wallet.destroyWallet().then(() => {
+            this.props.navigation.navigate('NewAccount');
+          });
+        },
+        },
+      ],
+      { cancelable: false });
+  };
+
+  renderLogout = () => {
+    return (
+      <BigButton type={'danger'} onPress={this.logout}>
+        {i18n.t('account.auth.logout')}
+      </BigButton>
+    );
   };
 
   render() {

@@ -115,18 +115,26 @@ export default class SendScreen extends React.Component {
         output.address = output.address ? output.address : wallet.getDefaultChangeAddress();
         outputs[index] = output;
       });
-      this.props.navigation.navigate('UnlockScreen', {
-        from: 'send',
-        options: {
-          address: this.store.address,
-          amount: this.store.amount,
-          fee1: wallet.changeUnitFromSatTo1(fee),
-          inputs,
-          outputs,
-          fee,
-        },
+      this.props.stores.wallet.unlock(this.props.navigation, {
+        cancelAble: true,
+        messageComponentRender: this.renderUnlockMessage,
+        bottomComponentRender: this.renderCancelSend,
+        onUnlock: this.onUnlock,
       });
     });
+  };
+
+  renderCancelSend = (dismiss) => {
+    return (
+      <BigButton type={'warning'} onPress={() => {
+        dismiss();
+      }}>
+        {i18n.t('account.send.cancelSend')}
+      </BigButton>
+    );
+  };
+
+  onUnlock = (res) => {
   };
 
   checkAddress = () => {

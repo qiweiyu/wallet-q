@@ -1,17 +1,15 @@
 import React from 'react';
-import { observable, action, set } from 'mobx';
+import { observable, action } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import {
-  Alert,
   Image,
   ScrollView,
   View,
   StyleSheet,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 
-import { Screen, BigButton } from 'src/components';
+import { Screen } from 'src/components';
 import { GesturePassword } from 'src/components/GesturePassword';
 import logo from 'assets/images/icon.png';
 
@@ -24,24 +22,31 @@ export default class UnlockScreen extends React.Component {
     const { params } = navigation.state;
     return {
       header: null,
-      gesturesEnabled: params.from !== 'send',
+      gesturesEnabled: !!params.cancelAble,
     };
   };
 
   @observable
   store = {
     isError: false,
-    from: '',
+    cancelAble: true,
+    bottomComponentRender: null,
+    onUnlock: null,
   };
 
   onBackButtonPressAndroid = () => {
-    // directly return true, do nothing
-    return true;
+    // return false, and the default handler will handle it
+    // return true, do nothing, so can not cancel
+    return !this.store.cancelAble;
   };
 
+  @action
   componentDidMount() {
     this.props.stores.wallet.unlocking();
-    this.store.from = this.props.navigation.getParam('from');
+    this.store.cancelAble = !!this.props.navigation.getParam('cancelAble');
+    this.store.messageComponentRender = this.props.navigation.getParam('messageComponentRender');
+    this.store.bottomComponentRender = this.props.navigation.getParam('bottomComponentRender');
+    this.store.onUnlock = this.props.navigation.getParam('onUnlock');
   };
 
   render() {
@@ -60,67 +65,34 @@ export default class UnlockScreen extends React.Component {
               message={i18n.t('account.unlock.drawGestureToUnlock')}
               warningMessage={i18n.t('account.unlock.drawGestureError')}
             />
+            {this.store.messageComponentRender instanceof Function && this.store.messageComponentRender()}
           </View>
           <ScrollView/>
           <View>
-            {this.store.from === 'auth' &&
-            <BigButton type={'danger'} onPress={this.logout}>
-              {i18n.t('account.unlock.logout')}
-            </BigButton>}
-            {this.store.from === 'send' &&
-            <BigButton type={'warning'} onPress={this.warning}>
-              {i18n.t('account.unlock.cancelSend')}
-            </BigButton>}
+            {this.store.bottomComponentRender instanceof Function && this.store.bottomComponentRender(this.dismiss)}
           </View>
         </Screen>
       </AndroidBackHandler>
     );
   }
 
-  handleFinish = (password) => {
-    if (this.store.from === 'auth') {
-      this.unlockFromAuth(password);
-    } else if (this.store.from === 'send') {
-    }
-  };
-
   @action
-  unlockFromAuth = (password) => {
+  handleFinish = (password) => {
     wallet.decryptLocalSavedWallet(password).then(res => {
       if (!res) {
         this.store.isError = false;
         this.store.isError = true;
       } else {
-        set(this.props.stores.wallet, {
-          hasWif: !!res.wif,
-          hasMnemonic: !!res.mnemonic,
-        });
-        Toast.show(i18n.t('account.unlock.unlockSuccess'));
-        this.props.stores.wallet.unlock();
-        this.props.navigation.goBack();
+        if (this.store.onUnlock instanceof Function) {
+          this.store.onUnlock(res);
+        }
+        this.dismiss();
       }
     });
   };
 
-  @action
-  logout = () => {
-    Alert.alert(
-      i18n.t('account.unlock.logout'),
-      i18n.t('account.unlock.logoutDesc'),
-      [
-        {
-          text: i18n.t('common.cancel'), onPress: () => {
-        },
-        },
-        {
-          text: i18n.t('common.ok'), onPress: () => {
-          wallet.destroyWallet().then(() => {
-            this.props.navigation.navigate('NewAccount');
-          });
-        },
-        },
-      ],
-      { cancelable: false });
+  dismiss = () => {
+    this.props.navigation.goBack();
   };
 }
 

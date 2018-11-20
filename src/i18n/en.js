@@ -36,6 +36,15 @@ export default {
     },
   },
   account: {
+    unlock: {
+      drawGestureToUnlock: 'Draw Gesture Password To Unlock Your Wallet',
+      drawGestureError: 'Gesture Password is wrong',
+    },
+    auth: {
+      logout: 'LOGOUT',
+      logoutDesc: 'Logout will destroy the private data stores in this device, please ensure you have backed up your private key or mnemonics',
+      unlockSuccess: 'Unlock Success',
+    },
     new: {
       welcome1: 'Welcome to Wallet·Q',
       welcome2: 'THE GATE TO BLOCKCHAIN',
@@ -43,16 +52,6 @@ export default {
       importByMnemonic: 'Import Wallet By Mnemonic',
       importByWif: 'Import Wallet By Private Key (WIF)',
       importByAddress: 'Import Wallet By Address',
-    },
-    unlock: {
-      drawGestureToUnlock: 'Draw Gesture Password To Unlock Your Wallet',
-      drawGestureError: 'Gesture Password is wrong',
-      logout: 'LOGOUT',
-      logoutDesc: 'Logout will destroy the private data stores in this device, please ensure you have backed up your private key or mnemonics',
-      unlockSuccess: 'Unlock Success',
-      sendMessage1: 'Will send ',
-      sendMessage2: ' to address ',
-      cancelSend: 'Cancel Transfer',
     },
     setPassword: {
       title: 'Set Unlock Password',
@@ -107,6 +106,7 @@ export default {
       amountErrorDesc: 'Please input a right amount',
       feeAmount: 'The fee is',
       feeAmountTooMuch: 'Fee and amount sum is greater than the available amount',
+      cancelSend: 'Cancel Transfer',
     },
   },
 };

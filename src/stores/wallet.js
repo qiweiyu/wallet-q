@@ -45,8 +45,21 @@ export default class Wallet extends Model {
   };
 
   @action
-  unlock = () => {
-    this.lockStatus = 'unlock';
+  unlock = (navigation, options = {}) => {
+    if (this.lockStatus === 'unlocking') {
+      return null;
+    }
+    navigation.navigate('UnlockScreen', {
+      cancelAble: !!options.cancelAble,
+      messageComponentRender: options.messageComponentRender,
+      bottomComponentRender: options.bottomComponentRender,
+      onUnlock: (...args) => {
+        if (options.onUnlock instanceof Function) {
+          options.onUnlock(...args);
+        }
+        this.lockStatus = 'unlock';
+      },
+    });
   };
 
   isLocking = () => {
