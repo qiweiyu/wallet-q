@@ -42,11 +42,15 @@ export default class UnlockScreen extends React.Component {
 
   @action
   componentDidMount() {
-    this.props.stores.wallet.unlocking();
     this.store.cancelAble = !!this.props.navigation.getParam('cancelAble');
     this.store.messageComponentRender = this.props.navigation.getParam('messageComponentRender');
     this.store.bottomComponentRender = this.props.navigation.getParam('bottomComponentRender');
     this.store.onUnlock = this.props.navigation.getParam('onUnlock');
+  };
+
+  @action
+  componentWillUnmount() {
+    this.props.stores.app.unlockingScreenPopped = false;
   };
 
   render() {

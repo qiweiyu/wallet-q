@@ -2,7 +2,6 @@ import React from 'react';
 import { Alert, View, TouchableOpacity, Text, AppState } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import { withNavigation } from 'react-navigation';
-import { set } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import i18n from 'src/i18n';
 import wallet from 'src/utils/wallet';
@@ -49,25 +48,21 @@ class AuthScreenNoNav extends React.Component {
     if (AuthScreenNoNav.appState === 'background' && nextAppState === 'active') {
       this.checkAndHandleUnlock();
     } else if (nextAppState === 'background') {
-      this.props.stores.wallet.lock();
+      this.props.stores.app.lock();
     }
     AuthScreenNoNav.appState = nextAppState;
   };
 
   checkAndHandleUnlock = () => {
-    if (this.props.stores.wallet.isLocking()) {
-      this.props.stores.wallet.unlock(this.props.navigation, {
+    if (this.props.stores.app.isLocking()) {
+      this.props.stores.app.unlock(this.props.navigation, {
         bottomComponentRender: this.renderLogout,
         onUnlock: this.onUnlock,
       });
     }
   };
 
-  onUnlock = (res) => {
-    set(this.props.stores.wallet, {
-      hasWif: !!res.wif,
-      hasMnemonic: !!res.mnemonic,
-    });
+  onUnlock = () => {
     Toast.show(i18n.t('account.auth.unlockSuccess'));
   };
 
