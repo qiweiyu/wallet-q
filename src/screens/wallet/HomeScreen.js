@@ -61,7 +61,13 @@ export default class HomeScreen extends React.Component {
           <View style={[styles.txAmountTag, styles[`typeTag${item.type}`]]}>
             <Text style={styles.txAmountTagText}>{i18n.t(`common.tx.type.${item.type}`)}</Text>
           </View>
-          <Text> {moment(item.timestamp * 1000).smartFormat()}</Text>
+          {
+            item.timestamp ? (
+              <Text> {moment(item.timestamp * 1000).smartFormat()}</Text>
+            ) : (
+              <Text> {i18n.t('wallet.home.packaging')}</Text>
+            )
+          }
         </View>
         {item.amountSat > 0 ? (
           <View style={styles.txAmountContainer}>

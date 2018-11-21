@@ -8,6 +8,7 @@ import {
   TextInput,
   Slider,
 } from 'react-native';
+import Toast from 'react-native-simple-toast';
 import { observable, set } from 'mobx';
 import { inject, observer } from 'mobx-react';
 
@@ -63,7 +64,7 @@ export default class SendScreen extends React.Component {
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>
               {i18n.t('wallet.send.amount')}
-              ({i18n.t('wallet.send.availableAmount')}{this.props.stores.wallet.mature} QTUM)
+              ({i18n.t('wallet.send.availableAmount')}{this.props.stores.wallet.available} QTUM)
             </Text>
             <TextInput
               style={styles.input}
@@ -174,7 +175,12 @@ export default class SendScreen extends React.Component {
           text: i18n.t('wallet.send.send'),
           onPress: () => {
             this.props.stores.wallet.postTx(tx.toHex()).then(res => {
-              console.log('post res', res);
+              if (res.status === 0) {
+                Toast.show(i18n.t('wallet.send.sendSuccess'));
+                this.props.navigation.navigate('Home');
+              } else {
+                Toast.show(res.message);
+              }
             });
           },
         },
@@ -210,7 +216,7 @@ export default class SendScreen extends React.Component {
     let error = null;
     if (isNaN(this.store.amount) || this.store.amount <= 0) {
       error = i18n.t('wallet.send.amountError');
-    } else if (this.store.amount > parseFloat(this.props.stores.wallet.mature.replace(',', ''))) {
+    } else if (this.store.amount > parseFloat(this.props.stores.wallet.available.replace(',', ''))) {
       error = i18n.t('wallet.send.amountTooMuch');
     }
     if (error) {

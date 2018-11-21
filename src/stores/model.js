@@ -24,8 +24,13 @@ export default class Model {
           });
           reject(res);
         } else {
-          res.json().then(responseJson => {
-            resolve(responseJson);
+          res.text().then(responseText => {
+            try {
+              const responseJson = JSON.parse(responseText);
+              resolve(responseJson);
+            } catch {
+              resolve(responseText);
+            }
           });
         }
       }).catch(error => {
@@ -40,12 +45,11 @@ export default class Model {
     });
   };
 
-  post = (url, body = '') => {
+  post = (url, body = '', options = {}) => {
     return new Promise((resolve, reject) => {
-      fetch(url, {
-        method: 'POST',
-        body,
-      }).then(res => {
+      options.method = 'POST';
+      options.body = body;
+      fetch(url, options).then(res => {
         if (res.status !== 200) {
           log.warning('Api post failed: ', {
             url,
@@ -54,8 +58,13 @@ export default class Model {
           });
           reject(res);
         } else {
-          res.json().then(responseJson => {
-            resolve(responseJson);
+          res.text().then(responseText => {
+            try {
+              const responseJson = JSON.parse(responseText);
+              resolve(responseJson);
+            } catch {
+              resolve(responseText);
+            }
           });
         }
       }).catch(error => {
@@ -68,5 +77,11 @@ export default class Model {
         resolve(null);
       });
     });
+  };
+
+  postJson = (url, body = '', options = {}) => {
+    options.headers = options.headers || {};
+    options.headers['content-type'] = 'application/json';
+    return this.post(url, JSON.stringify(body), options);
   };
 }

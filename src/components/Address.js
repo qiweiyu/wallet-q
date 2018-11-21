@@ -14,6 +14,14 @@ export class AddressInfo extends React.Component {
           {this.props.stores.wallet.balance}
           <Text style={styles.balanceUnit}> QTUM</Text>
         </Text>
+        {this.props.stores.wallet.staking > 0 && (
+          <Text style={styles.label}>{i18n.t('components.address.locked')}</Text>
+        )}
+        {this.props.stores.wallet.staking > 0 && (
+          <Text style={styles.info}>
+            {this.props.stores.wallet.staking} QTUM
+          </Text>
+        )}
         <Text style={styles.label}>{i18n.t('components.address.address')}</Text>
         <Text style={styles.info}>
           {this.props.stores.wallet.address}

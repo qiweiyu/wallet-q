@@ -150,6 +150,16 @@ export default class Wallet extends Model {
     return wallet.changeUnitFromSatTo1(this.stakingSat);
   }
 
+  @computed
+  get availableSat() {
+    return this.balanceSat - this.stakingSat;
+  }
+
+  @computed
+  get available() {
+    return wallet.changeUnitFromSatTo1(this.availableSat);
+  }
+
   /**
    * @param address
    * @param isRefresh
@@ -250,7 +260,7 @@ export default class Wallet extends Model {
       if (res) {
         const utxoList = [];
         res.forEach((item) => {
-          if (item.confirmations > 500) {
+          if (!(item.isStake && item.confirmations < 500)) {
             utxoList.push(item);
           }
         });
@@ -267,6 +277,19 @@ export default class Wallet extends Model {
 
   @action
   postTx = async (txHex) => {
-    this.post(`${this.apiHost}/tx/send`, txHex);
+    const sendRes = await this.postJson(`${this.apiHost}/tx/send`, {
+      rawtx: txHex
+    });
+    if (sendRes.status === 0) {
+      // no need await
+      this.fetchWalletInfo();
+      this.balanceHistory = [];
+      this.balanceHistoryMap = new Map();
+      this.balanceHistoryCount = 0;
+      this.balanceHistoryPage = 0;
+      this.utxoList = [];
+      this.utxoFetchTime = null;
+    }
+    return sendRes;
   };
 }

@@ -84,6 +84,7 @@ export default {
     home: {
       title: '钱包',
       balance: '余额',
+      packaging: '打包中',
     },
     receive: {
       title: '收款码',
@@ -111,6 +112,7 @@ export default {
       unlockMessage2: '到地址',
       finalConfirm: '最后一次确认',
       send: '转账',
+      sendSuccess: '发送成功',
     },
   },
 };

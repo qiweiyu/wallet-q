@@ -84,6 +84,7 @@ export default {
     home: {
       title: 'Wallet',
       balance: 'Balance',
+      packaging: 'Packaging',
     },
     receive: {
       title: 'Receive Code',
@@ -111,6 +112,7 @@ export default {
       unlockMessage2: ' to address ',
       finalConfirm: 'The final confirm',
       send: 'Send',
+      sendSuccess: 'Send Success',
     },
   },
 };
